@@ -1039,6 +1039,145 @@
           }
         }
       }
+    },
+    "/api/v1/study/package": {
+      "post": {
+        "tags": [
+          "activities"
+        ],
+        "summary": "Generate Study Package",
+        "description": "Retrieve or generate a full StudyPackage for a given TaskContext or topic_id and support mode.",
+        "operationId": "generate_study_package_api_v1_study_package_post",
+        "parameters": [
+          {
+            "name": "X-Local-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Local-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudyPackageRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudyPackage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/study/sample": {
+      "get": {
+        "tags": [
+          "activities"
+        ],
+        "summary": "Get Sample Study Package",
+        "description": "Return a validated StudyPackage for development and preview of the Study screen.",
+        "operationId": "get_sample_study_package_api_v1_study_sample_get",
+        "parameters": [
+          {
+            "name": "topic_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Topic Id"
+            }
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/SupportMode",
+              "default": "normal"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudyPackage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/study/cache-stats": {
+      "get": {
+        "tags": [
+          "activities"
+        ],
+        "summary": "Get Cache Stats",
+        "description": "Return in-memory LRU cache telemetry.",
+        "operationId": "get_cache_stats_api_v1_study_cache_stats_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1189,6 +1328,48 @@
         ],
         "title": "CurriculumSnapshot"
       },
+      "DiagramData": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "table",
+              "flow"
+            ],
+            "title": "Kind"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Title"
+          },
+          "headers": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Headers"
+          },
+          "rows": {
+            "items": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": "array",
+            "title": "Rows"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "kind",
+          "title"
+        ],
+        "title": "DiagramData"
+      },
       "GoalCreate": {
         "properties": {
           "expected_revision": {
@@ -1302,6 +1483,38 @@
         ],
         "title": "PlanJobCreate"
       },
+      "PracticeTask": {
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "minLength": 5,
+            "title": "Prompt"
+          },
+          "instructions": {
+            "type": "string",
+            "minLength": 5,
+            "title": "Instructions"
+          },
+          "starter_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Starter Code"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "prompt",
+          "instructions"
+        ],
+        "title": "PracticeTask"
+      },
       "ProgressCommand": {
         "properties": {
           "expected_revision": {
@@ -1349,6 +1562,129 @@
         ],
         "title": "ProgressCommand"
       },
+      "ProgressiveHint": {
+        "properties": {
+          "level": {
+            "type": "integer",
+            "maximum": 3.0,
+            "minimum": 1.0,
+            "title": "Level"
+          },
+          "tier": {
+            "type": "string",
+            "enum": [
+              "conceptual_cue",
+              "concrete_direction",
+              "partial_step"
+            ],
+            "title": "Tier"
+          },
+          "hint_text": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Hint Text"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "level",
+          "tier",
+          "hint_text"
+        ],
+        "title": "ProgressiveHint"
+      },
+      "ProvenanceMetadata": {
+        "properties": {
+          "origin": {
+            "type": "string",
+            "enum": [
+              "generated",
+              "template",
+              "cache"
+            ],
+            "title": "Origin"
+          },
+          "model_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Id"
+          },
+          "context_hash": {
+            "type": "string",
+            "title": "Context Hash"
+          },
+          "validation_status": {
+            "type": "string",
+            "title": "Validation Status"
+          },
+          "latency_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latency Ms"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "origin",
+          "context_hash",
+          "validation_status"
+        ],
+        "title": "ProvenanceMetadata"
+      },
+      "ResourceMatch": {
+        "properties": {
+          "resource_id": {
+            "type": "string",
+            "title": "Resource Id"
+          },
+          "topic_id": {
+            "type": "string",
+            "title": "Topic Id"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "source_label": {
+            "type": "string",
+            "title": "Source Label"
+          },
+          "score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "resource_id",
+          "topic_id",
+          "text",
+          "source_label"
+        ],
+        "title": "ResourceMatch"
+      },
       "SelfReport": {
         "type": "string",
         "enum": [
@@ -1358,6 +1694,88 @@
           "high"
         ],
         "title": "SelfReport"
+      },
+      "SkillEvidence": {
+        "properties": {
+          "skill_id": {
+            "type": "string",
+            "title": "Skill Id"
+          },
+          "independent_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Independent Count"
+          },
+          "supported_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Supported Count"
+          },
+          "performance_estimate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Performance Estimate"
+          },
+          "evidence_status": {
+            "type": "string",
+            "enum": [
+              "unknown",
+              "limited",
+              "needs_attention",
+              "ordinary",
+              "strong"
+            ],
+            "title": "Evidence Status"
+          },
+          "attempt_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Attempt Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "skill_id",
+          "independent_count",
+          "supported_count",
+          "evidence_status"
+        ],
+        "title": "SkillEvidence"
+      },
+      "SourceReference": {
+        "properties": {
+          "resource_id": {
+            "type": "string",
+            "title": "Resource Id"
+          },
+          "source_label": {
+            "type": "string",
+            "title": "Source Label"
+          },
+          "relevant_excerpt": {
+            "type": "string",
+            "title": "Relevant Excerpt"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "resource_id",
+          "source_label",
+          "relevant_excerpt"
+        ],
+        "title": "SourceReference"
       },
       "StudentCreate": {
         "properties": {
@@ -1461,6 +1879,137 @@
         ],
         "title": "StudentPublic"
       },
+      "StudyPackage": {
+        "properties": {
+          "work_item_id": {
+            "type": "string",
+            "title": "Work Item Id"
+          },
+          "topic_id": {
+            "type": "string",
+            "title": "Topic Id"
+          },
+          "objective": {
+            "type": "string",
+            "title": "Objective"
+          },
+          "duration_minutes": {
+            "type": "integer",
+            "title": "Duration Minutes"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "support_mode": {
+            "$ref": "#/components/schemas/SupportMode"
+          },
+          "evidence_status": {
+            "type": "string",
+            "title": "Evidence Status"
+          },
+          "explanation": {
+            "type": "string",
+            "title": "Explanation"
+          },
+          "worked_example": {
+            "$ref": "#/components/schemas/WorkedExample"
+          },
+          "practice": {
+            "$ref": "#/components/schemas/PracticeTask"
+          },
+          "hints": {
+            "items": {
+              "$ref": "#/components/schemas/ProgressiveHint"
+            },
+            "type": "array",
+            "title": "Hints"
+          },
+          "solution": {
+            "type": "string",
+            "title": "Solution"
+          },
+          "diagram": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DiagramData"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/SourceReference"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/ProvenanceMetadata"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "work_item_id",
+          "topic_id",
+          "objective",
+          "duration_minutes",
+          "title",
+          "support_mode",
+          "evidence_status",
+          "explanation",
+          "worked_example",
+          "practice",
+          "hints",
+          "solution",
+          "sources",
+          "provenance"
+        ],
+        "title": "StudyPackage"
+      },
+      "StudyPackageRequest": {
+        "properties": {
+          "context": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TaskContext"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "topic_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Topic Id"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/SupportMode",
+            "default": "normal"
+          }
+        },
+        "type": "object",
+        "title": "StudyPackageRequest"
+      },
+      "SupportMode": {
+        "type": "string",
+        "enum": [
+          "normal",
+          "simpler",
+          "another_example"
+        ],
+        "title": "SupportMode"
+      },
       "TargetInput": {
         "properties": {
           "topic_id": {
@@ -1479,6 +2028,40 @@
           "topic_id"
         ],
         "title": "TargetInput"
+      },
+      "TaskContext": {
+        "properties": {
+          "work_item": {
+            "$ref": "#/components/schemas/WorkItem"
+          },
+          "objective": {
+            "type": "string",
+            "title": "Objective"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/SkillEvidence"
+            },
+            "type": "array",
+            "title": "Evidence"
+          },
+          "resources": {
+            "items": {
+              "$ref": "#/components/schemas/ResourceMatch"
+            },
+            "type": "array",
+            "title": "Resources"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "work_item",
+          "objective",
+          "evidence",
+          "resources"
+        ],
+        "title": "TaskContext"
       },
       "ValidationError": {
         "properties": {
@@ -1519,6 +2102,121 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "WorkItem": {
+        "properties": {
+          "work_item_id": {
+            "type": "string",
+            "title": "Work Item Id"
+          },
+          "topic_id": {
+            "type": "string",
+            "title": "Topic Id"
+          },
+          "skill_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skill Id"
+          },
+          "unit_key": {
+            "type": "string",
+            "title": "Unit Key"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "learn",
+              "practice",
+              "assess",
+              "review"
+            ],
+            "title": "Kind"
+          },
+          "duration_minutes": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Duration Minutes"
+          },
+          "predecessor_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Predecessor Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "work_item_id",
+          "topic_id",
+          "unit_key",
+          "kind",
+          "duration_minutes"
+        ],
+        "title": "WorkItem"
+      },
+      "WorkedExample": {
+        "properties": {
+          "problem": {
+            "type": "string",
+            "minLength": 5,
+            "title": "Problem"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/WorkedExampleStep"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Steps"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "problem",
+          "steps"
+        ],
+        "title": "WorkedExample"
+      },
+      "WorkedExampleStep": {
+        "properties": {
+          "step_number": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Step Number"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Description"
+          },
+          "code_or_detail": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code Or Detail"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "step_number",
+          "description"
+        ],
+        "title": "WorkedExampleStep"
       }
     }
   }
