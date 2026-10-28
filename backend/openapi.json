@@ -1178,10 +1178,368 @@
           }
         }
       }
+    },
+    "/api/v1/assistant/query": {
+      "post": {
+        "tags": [
+          "assistant"
+        ],
+        "summary": "Query Assistant",
+        "description": "Execute context-aware assistant pipeline with lightweight selective RAG.",
+        "operationId": "query_assistant_api_v1_assistant_query_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssistantQuery"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssistantResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/assistant/context": {
+      "get": {
+        "tags": [
+          "assistant"
+        ],
+        "summary": "Get Assistant Context",
+        "description": "Get active scope summary, authoritative structured facts, and starter questions.",
+        "operationId": "get_assistant_context_api_v1_assistant_context_get",
+        "parameters": [
+          {
+            "name": "section",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/AssistantSection",
+              "default": "study"
+            }
+          },
+          {
+            "name": "topic_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Topic Id"
+            }
+          },
+          {
+            "name": "resource_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Resource Id"
+            }
+          },
+          {
+            "name": "goal_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Goal Id"
+            }
+          },
+          {
+            "name": "plan_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Plan Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContextPack"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/assistant/clear": {
+      "post": {
+        "tags": [
+          "assistant"
+        ],
+        "summary": "Clear Assistant Cache",
+        "description": "Clear in-memory cache for assistant.",
+        "operationId": "clear_assistant_cache_api_v1_assistant_clear_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AssistantQuery": {
+        "properties": {
+          "question": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Question"
+          },
+          "section": {
+            "$ref": "#/components/schemas/AssistantSection",
+            "default": "study"
+          },
+          "topic_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Topic Id"
+          },
+          "resource_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resource Id"
+          },
+          "goal_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Goal Id"
+          },
+          "plan_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plan Id"
+          },
+          "history": {
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            },
+            "type": "array",
+            "maxItems": 6,
+            "title": "History"
+          },
+          "requested_mode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requested Mode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question"
+        ],
+        "title": "AssistantQuery"
+      },
+      "AssistantReference": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "locator": {
+            "type": "string",
+            "title": "Locator"
+          },
+          "snippet": {
+            "type": "string",
+            "title": "Snippet"
+          },
+          "reference_type": {
+            "type": "string",
+            "enum": [
+              "resource",
+              "plan_entry",
+              "progress",
+              "change",
+              "curriculum",
+              "general"
+            ],
+            "title": "Reference Type"
+          },
+          "link": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Link"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "locator",
+          "snippet",
+          "reference_type"
+        ],
+        "title": "AssistantReference"
+      },
+      "AssistantResponse": {
+        "properties": {
+          "answer": {
+            "type": "string",
+            "title": "Answer"
+          },
+          "scope_used": {
+            "type": "string",
+            "title": "Scope Used"
+          },
+          "references": {
+            "items": {
+              "$ref": "#/components/schemas/AssistantReference"
+            },
+            "type": "array",
+            "title": "References"
+          },
+          "limitations": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Limitations"
+          },
+          "suggested_actions": {
+            "items": {
+              "$ref": "#/components/schemas/SuggestedAction"
+            },
+            "type": "array",
+            "title": "Suggested Actions"
+          },
+          "provenance": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Provenance"
+          }
+        },
+        "type": "object",
+        "required": [
+          "answer",
+          "scope_used"
+        ],
+        "title": "AssistantResponse"
+      },
+      "AssistantSection": {
+        "type": "string",
+        "enum": [
+          "resources",
+          "study",
+          "my_plan",
+          "progress",
+          "changes",
+          "general_learning"
+        ],
+        "title": "AssistantSection"
+      },
       "AttemptBatch": {
         "properties": {
           "expected_revision": {
@@ -1278,6 +1636,91 @@
           "availability"
         ],
         "title": "AvailabilityReplace"
+      },
+      "ChatMessage": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant"
+            ],
+            "title": "Role"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          }
+        },
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "title": "ChatMessage"
+      },
+      "ContextPack": {
+        "properties": {
+          "section": {
+            "$ref": "#/components/schemas/AssistantSection"
+          },
+          "scope_display": {
+            "type": "string",
+            "title": "Scope Display"
+          },
+          "structured_facts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Structured Facts"
+          },
+          "retrieved_passages": {
+            "items": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Retrieved Passages"
+          },
+          "allowed_locators": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Allowed Locators"
+          },
+          "unsupported_in_resource": {
+            "type": "boolean",
+            "title": "Unsupported In Resource",
+            "default": false
+          },
+          "suggested_actions": {
+            "items": {
+              "$ref": "#/components/schemas/SuggestedAction"
+            },
+            "type": "array",
+            "title": "Suggested Actions"
+          },
+          "starter_questions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Starter Questions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "section",
+          "scope_display",
+          "structured_facts",
+          "retrieved_passages",
+          "allowed_locators"
+        ],
+        "title": "ContextPack"
       },
       "CurriculumSnapshot": {
         "properties": {
@@ -2000,6 +2443,45 @@
         },
         "type": "object",
         "title": "StudyPackageRequest"
+      },
+      "SuggestedAction": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "path": {
+            "type": "string",
+            "title": "Path"
+          },
+          "action_type": {
+            "type": "string",
+            "enum": [
+              "navigate",
+              "switch_scope",
+              "request_mode"
+            ],
+            "title": "Action Type"
+          },
+          "payload": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payload"
+          }
+        },
+        "type": "object",
+        "required": [
+          "label",
+          "path",
+          "action_type"
+        ],
+        "title": "SuggestedAction"
       },
       "SupportMode": {
         "type": "string",

@@ -388,10 +388,127 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/assistant/query": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Query Assistant
+         * @description Execute context-aware assistant pipeline with lightweight selective RAG.
+         */
+        post: operations["query_assistant_api_v1_assistant_query_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/assistant/context": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Assistant Context
+         * @description Get active scope summary, authoritative structured facts, and starter questions.
+         */
+        get: operations["get_assistant_context_api_v1_assistant_context_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/assistant/clear": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Clear Assistant Cache
+         * @description Clear in-memory cache for assistant.
+         */
+        post: operations["clear_assistant_cache_api_v1_assistant_clear_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AssistantQuery */
+        AssistantQuery: {
+            /** Question */
+            question: string;
+            /** @default study */
+            section: components["schemas"]["AssistantSection"];
+            /** Topic Id */
+            topic_id?: string | null;
+            /** Resource Id */
+            resource_id?: string | null;
+            /** Goal Id */
+            goal_id?: string | null;
+            /** Plan Id */
+            plan_id?: string | null;
+            /** History */
+            history?: components["schemas"]["ChatMessage"][];
+            /** Requested Mode */
+            requested_mode?: string | null;
+        };
+        /** AssistantReference */
+        AssistantReference: {
+            /** Title */
+            title: string;
+            /** Locator */
+            locator: string;
+            /** Snippet */
+            snippet: string;
+            /**
+             * Reference Type
+             * @enum {string}
+             */
+            reference_type: "resource" | "plan_entry" | "progress" | "change" | "curriculum" | "general";
+            /** Link */
+            link?: string | null;
+        };
+        /** AssistantResponse */
+        AssistantResponse: {
+            /** Answer */
+            answer: string;
+            /** Scope Used */
+            scope_used: string;
+            /** References */
+            references?: components["schemas"]["AssistantReference"][];
+            /** Limitations */
+            limitations?: string | null;
+            /** Suggested Actions */
+            suggested_actions?: components["schemas"]["SuggestedAction"][];
+            /** Provenance */
+            provenance?: {
+                [key: string]: unknown;
+            };
+        };
+        /**
+         * AssistantSection
+         * @enum {string}
+         */
+        AssistantSection: "resources" | "study" | "my_plan" | "progress" | "changes" | "general_learning";
         /** AttemptBatch */
         AttemptBatch: {
             /** Expected Revision */
@@ -427,6 +544,39 @@ export interface components {
             expected_revision: number;
             /** Availability */
             availability: components["schemas"]["AvailabilityInput"][];
+        };
+        /** ChatMessage */
+        ChatMessage: {
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "user" | "assistant";
+            /** Content */
+            content: string;
+        };
+        /** ContextPack */
+        ContextPack: {
+            section: components["schemas"]["AssistantSection"];
+            /** Scope Display */
+            scope_display: string;
+            /** Structured Facts */
+            structured_facts: string[];
+            /** Retrieved Passages */
+            retrieved_passages: {
+                [key: string]: string;
+            }[];
+            /** Allowed Locators */
+            allowed_locators: string[];
+            /**
+             * Unsupported In Resource
+             * @default false
+             */
+            unsupported_in_resource: boolean;
+            /** Suggested Actions */
+            suggested_actions?: components["schemas"]["SuggestedAction"][];
+            /** Starter Questions */
+            starter_questions?: string[];
         };
         /** CurriculumSnapshot */
         CurriculumSnapshot: {
@@ -673,6 +823,20 @@ export interface components {
             topic_id?: string | null;
             /** @default normal */
             mode: components["schemas"]["SupportMode"];
+        };
+        /** SuggestedAction */
+        SuggestedAction: {
+            /** Label */
+            label: string;
+            /** Path */
+            path: string;
+            /**
+             * Action Type
+             * @enum {string}
+             */
+            action_type: "navigate" | "switch_scope" | "request_mode";
+            /** Payload */
+            payload?: string | null;
         };
         /**
          * SupportMode
@@ -1459,6 +1623,94 @@ export interface operations {
         };
     };
     get_cache_stats_api_v1_study_cache_stats_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    query_assistant_api_v1_assistant_query_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AssistantQuery"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssistantResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_assistant_context_api_v1_assistant_context_get: {
+        parameters: {
+            query?: {
+                section?: components["schemas"]["AssistantSection"];
+                topic_id?: string | null;
+                resource_id?: string | null;
+                goal_id?: string | null;
+                plan_id?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContextPack"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    clear_assistant_cache_api_v1_assistant_clear_post: {
         parameters: {
             query?: never;
             header?: never;

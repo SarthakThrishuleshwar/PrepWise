@@ -1,3 +1,4 @@
+import hashlib
 from typing import Literal
 from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel, Field
@@ -6,10 +7,17 @@ from sqlalchemy import select
 from app.api.deps import current_student, get_session
 from app.contracts.domain import ResourceMatch, SkillEvidence, TaskContext, WorkItem
 from app.core.config import Settings
-from app.db.models import Resources, Topics
+from app.db.models import Base, Resources, Topics, Students
 from app.features.activities.fixtures import create_dev_task_context
 from app.features.activities.schemas import StudyPackage, SupportMode
 from app.features.activities.service import ActivityService
+from app.features.activities.assistant import (
+    AssistantQuery,
+    AssistantResponse,
+    AssistantSection,
+    ContextPack,
+    LearningAssistant,
+)
 from app.providers.gateway import OllamaGateway
 
 router = APIRouter(prefix="/study", tags=["activities"])
@@ -114,3 +122,76 @@ def get_cache_stats(
 ):
     """Return in-memory LRU cache telemetry."""
     return service.get_cache_stats()
+
+
+# ==============================================================================
+# Phase 5: Single Context-Aware Learning Assistant Router
+# ==============================================================================
+
+assistant_router = APIRouter(prefix="/assistant", tags=["assistant"])
+
+
+def get_learning_assistant(request: Request) -> LearningAssistant:
+    if not hasattr(request.app.state, "learning_assistant"):
+        request.app.state.learning_assistant = LearningAssistant(
+            gateway=request.app.state.gateway,
+            settings=request.app.state.settings,
+        )
+    return request.app.state.learning_assistant
+
+
+def resolve_auth_student(session=Depends(get_session), request: Request = None) -> str:
+    token = request.headers.get("X-Local-Token") if request else None
+    if token and len(token) <= 512:
+        students = Base.metadata.tables["students"]
+        digest = hashlib.sha256(token.encode()).hexdigest()
+        row = session.execute(select(students).where(students.c.client_token_hash == digest)).mappings().first()
+        if row:
+            return row["id"]
+    student_row = session.execute(select(Students).order_by(Students.created_at.desc())).scalars().first()
+    return student_row.id if student_row else "guest-student"
+
+
+@assistant_router.post("/query", response_model=AssistantResponse)
+def query_assistant(
+    body: AssistantQuery,
+    session=Depends(get_session),
+    student_id: str = Depends(resolve_auth_student),
+    assistant: LearningAssistant = Depends(get_learning_assistant),
+):
+    """Execute context-aware assistant pipeline with lightweight selective RAG."""
+    return assistant.answer_query(session, student_id, body)
+
+
+@assistant_router.get("/context", response_model=ContextPack)
+def get_assistant_context(
+    section: AssistantSection = AssistantSection.STUDY,
+    topic_id: str | None = None,
+    resource_id: str | None = None,
+    goal_id: str | None = None,
+    plan_id: str | None = None,
+    session=Depends(get_session),
+    student_id: str = Depends(resolve_auth_student),
+    assistant: LearningAssistant = Depends(get_learning_assistant),
+):
+    """Get active scope summary, authoritative structured facts, and starter questions."""
+    query = AssistantQuery(
+        question="starter",
+        section=section,
+        topic_id=topic_id,
+        resource_id=resource_id,
+        goal_id=goal_id,
+        plan_id=plan_id,
+    )
+    return assistant.resolve_context(session, student_id, query)
+
+
+@assistant_router.post("/clear")
+def clear_assistant_cache(
+    assistant: LearningAssistant = Depends(get_learning_assistant),
+):
+    """Clear in-memory cache for assistant."""
+    count = len(assistant._cache)
+    assistant._cache.clear()
+    return {"status": "cleared", "evicted_items": count}
+

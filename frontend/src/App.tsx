@@ -5,7 +5,7 @@ import { api } from './lib/api'
 import { Home } from './features/home/Home'
 import { Setup } from './features/planning/Setup'
 import { CurriculumPage } from './features/curriculum/CurriculumPage'
-import { StudyPage } from './features/activities'
+import { StudyPage, AskPrepWise } from './features/activities'
 import { FeaturePage } from './components/FeaturePage'
 
 export function App() {
@@ -117,6 +117,7 @@ export function App() {
           </span>
         </div>
       </footer>
+      <AskPrepWise />
     </>
   )
 }
