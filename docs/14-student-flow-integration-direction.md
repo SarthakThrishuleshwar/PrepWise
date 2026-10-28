@@ -55,3 +55,17 @@ Inventory every teammate's implemented screens, components, backend routes, extr
 Current review found a horizontal header in App.tsx and automatic selection of rows[0] in Setup.tsx. These are observed gaps to fix during coordinated shell/planning integration. Person 5 integration and other uncommitted work are active; this clarification does not authorize overwriting those changes. Planning and Progress still include placeholders in the inspected shared router, so final completeness depends on the corresponding handbacks.
 
 Acceptance: desktop sidebar/mobile drawer; explicit subject selection; clear first-time and returning entry; manual availability working; timetable import either real and confirmable or visibly deferred; plan-to-study-to-progress context preserved; document chat works independently where ingestion is ready; existing Study/assistant/comparison features remain functional.
+
+## Additional owner requirement: discover actual teammate features
+
+The original split is an ownership map, not an exhaustive feature inventory. Inspect each incoming branch and handback for additional screens, controls, APIs and innovations before deciding the final navigation. Record each implemented feature's owner, entry point, route, required context, backend dependency, onward action and verification status. Reconcile this inventory with the actual student journey. Preserve useful working additions and fit them into appropriate pages or secondary actions; do not discard them because they were absent from earlier documentation or place every addition in the global sidebar.
+
+Every visible action must have a real destination or behavior. Verify cross-feature links with the correct goal, plan, session and resource context, including direct URL entry, refresh, browser Back/Forward and expired/missing context. Test successful writes against actual server state, errors and safe retries. Explicitly identify unfinished dependencies with a useful recovery action; do not ship silent no-op buttons, fabricated success states or unrelated placeholders as completed integrations.
+
+## Responsive layout and integration acceptance
+
+Use fluid CSS grid/flex layouts, flexible content widths and appropriate breakpoints rather than device-name detection or scaling the entire page. At narrow widths the global sidebar becomes an accessible drawer, Study's local outline collapses appropriately, comparison rows stack, and helper panels fit the viewport. Long titles, filenames, code, tables and diagrams must wrap or scroll inside their own containers without widening the whole page. Preserve data and task context through layout changes.
+
+Verify representative widths around 320/375px, 768px, 1024px and 1440px, plus landscape orientation, browser resizing and zoom/reflow. Check that the sidebar, helper panel, dialogs, sticky elements and on-screen keyboard do not cover essential controls. Maintain touch targets, visible focus, readable text and correctly managed modal focus. Use actual rendered screens and functional checks; a passing build or screenshots alone do not establish complete integration.
+
+For each integrated feature, record desktop/mobile behavior and a successful user path from entry to next action, together with empty/error/loading handling and any blocker. Run targeted regression checks after shared-shell or contract changes. Report completion according to verified behavior and retain a clear unresolved-integration list rather than claiming perfection without evidence.

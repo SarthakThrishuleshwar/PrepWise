@@ -99,40 +99,54 @@ def changes(
 def export(
     plan_id: str,
     format: str = Query(..., description="Export format: csv or json"),
+    type: str = Query("plan", description="Export type: 'plan' (full schedule) or 'changes' (comparison summary)"),
     student=Depends(current_student),
     session: Session = Depends(get_session),
 ):
     """
-    Version-specific plan export as CSV or JSON.
+    Version-specific plan or comparison export as CSV or JSON.
     Enforces student ownership: returns 404 PLAN_NOT_FOUND for unknown or unowned plan IDs.
     Exports the exact plan_id requested without silently replacing with current.
     """
-    # 1. Validate format
+    # 1. Validate format & type
     if format not in ("csv", "json"):
         raise AppError("UNSUPPORTED_FORMAT", f"Format '{format}' is not supported. Use 'csv' or 'json'.", 400)
+    if type not in ("plan", "changes"):
+        raise AppError("UNSUPPORTED_TYPE", f"Export type '{type}' is not supported. Use 'plan' or 'changes'.", 400)
     export_format = ExportFormat(format)
 
-    # 2. Load snapshot for this student
-    snapshot, goal_id = load_plan_snapshot(session, plan_id, student["id"])
-
-    # 3. Query work-item metadata for deferred items
-    deferred_wids = [d.work_item_id for d in snapshot.deferred]
-    wi_meta_map = {}
-    if deferred_wids:
-        rows = (
-            session.execute(
-                select(T["work_items"]).where(T["work_items"].c.id.in_(deferred_wids))
+    if type == "changes":
+        # 2. Export comparison diff
+        new_plan, goal_id = load_plan_snapshot(session, plan_id, student["id"])
+        parent_plan = None
+        if new_plan.parent_plan_id:
+            parent_plan, parent_goal_id = load_plan_snapshot(session, new_plan.parent_plan_id, student["id"])
+            if parent_goal_id != goal_id:
+                raise AppError("PLAN_NOT_FOUND", "Parent plan belongs to a different goal.", 404)
+        contexts = build_work_item_contexts(session, goal_id, student["id"], parent_plan, new_plan)
+        try:
+            diff_result = PlanDiffService.compare(parent_plan, new_plan, contexts)
+        except PlanDiffValidationError as exc:
+            raise AppError("DATA_INTEGRITY_ERROR", str(exc), 500) from exc
+        payload = ExportService.export_comparison(diff_result, export_format)
+    else:
+        # 3. Export plan snapshot
+        snapshot, goal_id = load_plan_snapshot(session, plan_id, student["id"])
+        deferred_wids = [d.work_item_id for d in snapshot.deferred]
+        wi_meta_map = {}
+        if deferred_wids:
+            rows = (
+                session.execute(
+                    select(T["work_items"]).where(T["work_items"].c.id.in_(deferred_wids))
+                )
+                .mappings()
+                .all()
             )
-            .mappings()
-            .all()
-        )
-        for r in rows:
-            wi_meta_map[r["id"]] = dict(r)
+            for r in rows:
+                wi_meta_map[r["id"]] = dict(r)
+        payload = ExportService.export_plan(snapshot, export_format, wi_meta_map)
 
-    # 4. Generate export payload
-    payload = ExportService.export_plan(snapshot, export_format, wi_meta_map)
-
-    # 5. Return HTTP Response with exact headers and disposition
+    # 4. Return HTTP Response with exact headers and disposition
     headers = {
         "Content-Disposition": f'attachment; filename="{payload.filename}"',
         "Content-Type": payload.media_type,

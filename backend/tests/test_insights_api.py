@@ -648,3 +648,69 @@ def test_read_only_invariants_across_all_routes(insights_env):
 
     assert pre_versions == post_versions
     assert pre_entries == post_entries
+
+
+def test_export_comparison_via_route(insights_env):
+    """Verify GET /api/v1/plans/{id}/export?type=changes in JSON and CSV formats with ownership enforcement."""
+    client, db = insights_env
+    headers, s = register_student(client, "Student CompareExport")
+    other_headers, _ = register_student(client, "Other Student")
+    env = setup_goal_and_work_items(db, s["student_id"])
+    gid = env["goal_id"]
+
+    p1 = create_saved_plan(
+        db,
+        gid,
+        version=1,
+        parent_plan_id=None,
+        entries_spec=[
+            {"work_item_id": env["wi_resized"], "study_date": "2026-10-28", "sequence": 1, "duration_minutes": 40}
+        ],
+    )
+    p2 = create_saved_plan(
+        db,
+        gid,
+        version=2,
+        parent_plan_id=p1,
+        entries_spec=[
+            {
+                "work_item_id": env["wi_resized"],
+                "study_date": "2026-10-29",
+                "sequence": 2,
+                "duration_minutes": 25,
+                "reason_code": "MISSED_WORK",
+            }
+        ],
+    )
+
+    # 1. Invalid type rejected with 400
+    res_bad = client.get(f"/api/v1/plans/{p2}/export?format=json&type=invalid", headers=headers)
+    assert res_bad.status_code == 400
+    assert res_bad.json()["error"]["code"] == "UNSUPPORTED_TYPE"
+
+    # 2. JSON comparison export via API
+    res_json = client.get(f"/api/v1/plans/{p2}/export?format=json&type=changes", headers=headers)
+    assert res_json.status_code == 200
+    assert res_json.headers["Content-Disposition"] == f'attachment; filename="comparison-plan-{p2}-v2.json"'
+    json_data = res_json.json()
+    assert json_data["report_type"] == "plan_comparison"
+    assert json_data["plan_id"] == p2
+    assert json_data["version"] == 2
+    assert len(json_data["changes"]) == 1
+    assert json_data["changes"][0]["is_moved"] is True
+    assert json_data["changes"][0]["is_resized"] is True
+
+    # 3. CSV comparison export via API
+    res_csv = client.get(f"/api/v1/plans/{p2}/export?format=csv&type=changes", headers=headers)
+    assert res_csv.status_code == 200
+    assert res_csv.headers["Content-Disposition"] == f'attachment; filename="comparison-plan-{p2}-v2.csv"'
+    csv_rows = list(csv.reader(io.StringIO(res_csv.text)))
+    assert len(csv_rows) == 2
+    assert csv_rows[0][0] == "version"
+    assert csv_rows[1][6] == "true"  # is_moved
+    assert csv_rows[1][7] == "true"  # is_resized
+
+    # 4. Ownership check: other student gets 404
+    res_other = client.get(f"/api/v1/plans/{p2}/export?format=json&type=changes", headers=other_headers)
+    assert res_other.status_code == 404
+    assert res_other.json()["error"]["code"] == "PLAN_NOT_FOUND"

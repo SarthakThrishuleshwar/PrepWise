@@ -61,6 +61,7 @@ export function App() {
                 title="A clear path starts with your goal."
                 description="Your profile and availability can be saved now. The planning feature will turn them into a validated daily schedule."
                 owner="Member 3 · Planning"
+                secondaryAction={{ to: '/changes', label: 'View plan changes & export' }}
               />
             }
           />

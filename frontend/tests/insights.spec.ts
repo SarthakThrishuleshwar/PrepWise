@@ -2,7 +2,8 @@
  * Feature tests for ChangesPage component behavior and rendering.
  *
  * Tests cover:
- * - Navigation link to /changes
+ * - Navigation link to /changes in header
+ * - Navigation from /plan secondary action to /changes
  * - Initial baseline plan v1 state
  * - Mocked factual changes response (v2 vs v1)
  * - Move plus resize presentation (both tags present)
@@ -10,9 +11,11 @@
  * - Removed item with missing reason labeled "Reason unavailable"
  * - Feasibility words + numbers (partial, capacity, shortfall, placement conflicts)
  * - Change filter buttons (all, moved, deferred, removed, added)
- * - Single-fetch export preview and download
+ * - Single-fetch export preview and download for full schedule (JSON)
+ * - Single-fetch export preview and download for changes report (CSV)
  * - Interactive on-demand change explanation
  * - Error state on API failure (with retry button, not masked as missing plan)
+ * - Live un-mocked empty state without plan/goal
  * - Responsive layout verification at mobile/desktop
  */
 
@@ -146,6 +149,14 @@ test.describe('ChangesPage feature suite', () => {
     await expect(page).toHaveURL(/\/changes/)
   })
 
+  test('navigation from /plan secondary action leads directly to /changes', async ({ page }) => {
+    await page.goto('/plan')
+    const changesLink = page.getByRole('link', { name: /view plan changes & export/i })
+    await expect(changesLink).toBeVisible()
+    await changesLink.click()
+    await expect(page).toHaveURL(/\/changes/)
+  })
+
   test('renders baseline plan v1 state correctly', async ({ page }, testInfo) => {
     await page.route('**/api/v1/plans/plan-v1-test/changes', async (route) => {
       await route.fulfill({
@@ -243,7 +254,7 @@ test.describe('ChangesPage feature suite', () => {
     await expect(page.locator('.change-card')).toHaveCount(4)
   })
 
-  test('single-fetch export preview and download exact blob', async ({ page }) => {
+  test('single-fetch export preview and download for full schedule (JSON)', async ({ page }) => {
     const mockJson = JSON.stringify({ plan_id: 'plan-v2-test', version: 2, targets: ['loops'] }, null, 2)
     let exportFetchCount = 0
 
@@ -255,7 +266,7 @@ test.describe('ChangesPage feature suite', () => {
       })
     })
 
-    await page.route('**/api/v1/plans/plan-v2-test/export?format=json', async (route) => {
+    await page.route('**/api/v1/plans/plan-v2-test/export*', async (route) => {
       exportFetchCount++
       await route.fulfill({
         status: 200,
@@ -268,7 +279,7 @@ test.describe('ChangesPage feature suite', () => {
     await page.goto('/changes?plan_id=plan-v2-test')
 
     // Preview export
-    await page.getByRole('button', { name: /preview export as json/i }).click()
+    await page.getByRole('button', { name: /preview export/i }).click()
     await expect(page.getByText('plan-v2.json')).toBeVisible()
     await expect(page.locator('.export-code-block')).toContainText('"plan_id": "plan-v2-test"')
     expect(exportFetchCount).toBe(1)
@@ -279,6 +290,48 @@ test.describe('ChangesPage feature suite', () => {
     const download = await downloadPromise
     expect(download.suggestedFilename()).toBe('plan-v2.json')
     expect(exportFetchCount).toBe(1) // Confirms zero redundant network fetch
+  })
+
+  test('single-fetch export preview and download for changes report (CSV)', async ({ page }) => {
+    const mockCsv = 'version,parent_plan_id,work_item_id,topic_id\n2,plan-v1,wi-01,loops\n'
+    let exportFetchCount = 0
+
+    await page.route('**/api/v1/plans/plan-v2-test/changes', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(MOCK_CHANGES_V2),
+      })
+    })
+
+    await page.route('**/api/v1/plans/plan-v2-test/export*', async (route) => {
+      exportFetchCount++
+      await route.fulfill({
+        status: 200,
+        contentType: 'text/csv',
+        headers: { 'Content-Disposition': 'attachment; filename="comparison-plan-v2.csv"' },
+        body: mockCsv,
+      })
+    })
+
+    await page.goto('/changes?plan_id=plan-v2-test')
+
+    // Toggle to Changes Summary and CSV
+    await page.getByRole('button', { name: 'Changes Summary' }).click()
+    await page.getByRole('button', { name: 'CSV' }).click()
+
+    // Preview export
+    await page.getByRole('button', { name: /preview export/i }).click()
+    await expect(page.getByText('comparison-plan-v2.csv')).toBeVisible()
+    await expect(page.locator('.export-code-block')).toContainText('version,parent_plan_id')
+    expect(exportFetchCount).toBe(1)
+
+    // Download button uses retained blob without refetching
+    const downloadPromise = page.waitForEvent('download')
+    await page.getByRole('button', { name: /download comparison-plan-v2\.csv/i }).click()
+    const download = await downloadPromise
+    expect(download.suggestedFilename()).toBe('comparison-plan-v2.csv')
+    expect(exportFetchCount).toBe(1)
   })
 
   test('interactive on-demand explanation for change item', async ({ page }) => {
@@ -329,5 +382,15 @@ test.describe('ChangesPage feature suite', () => {
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
     // Verify it is NOT masked as "No plan version selected"
     await expect(page.getByText('No plan version selected')).not.toBeVisible()
+  })
+
+  test('live un-mocked empty state without plan/goal displays honest guidance', async ({ page }) => {
+    // Navigate with no parameters and no goal in localStorage
+    await page.goto('/changes')
+
+    await expect(page.getByRole('heading', { name: 'No plan version selected' })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Set up a goal' })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'View current plan' })).toBeVisible()
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy()
   })
 })

@@ -102,6 +102,7 @@ export function ChangesPage() {
 
   // Export & Preview state
   const [exportFormat, setExportFormat] = useState<'csv' | 'json'>('json')
+  const [exportType, setExportType] = useState<'plan' | 'changes'>('plan')
   const [previewBlob, setPreviewBlob] = useState<Blob | null>(null)
   const [previewText, setPreviewText] = useState<string | null>(null)
   const [previewFilename, setPreviewFilename] = useState<string>('')
@@ -229,7 +230,7 @@ export function ChangesPage() {
     setPreviewFilename('')
     setPreviewError(null)
     setPreviewLoading(false)
-  }, [exportFormat])
+  }, [exportFormat, exportType])
 
   // Cleanup on unmount
   useEffect(() => {
@@ -252,6 +253,7 @@ export function ChangesPage() {
     const currentToken = ++previewRequestIdRef.current
     const currentRequestedPlan = resolvedPlanId
     const currentRequestedFormat = exportFormat
+    const currentRequestedType = exportType
 
     setPreviewBlob(null)
     setPreviewText(null)
@@ -264,10 +266,13 @@ export function ChangesPage() {
       const token = localStorage.getItem('learnnova.token')
       if (token) headers.set('X-Local-Token', token)
 
-      const res = await fetch(`/api/v1/plans/${resolvedPlanId}/export?format=${exportFormat}`, {
-        headers,
-        signal: abortController.signal,
-      })
+      const res = await fetch(
+        `/api/v1/plans/${resolvedPlanId}/export?format=${exportFormat}&type=${exportType}`,
+        {
+          headers,
+          signal: abortController.signal,
+        }
+      )
 
       if (!res.ok) {
         let errMessage = 'Failed to fetch export.'
@@ -283,7 +288,8 @@ export function ChangesPage() {
       if (
         currentToken !== previewRequestIdRef.current ||
         resolvedPlanId !== currentRequestedPlan ||
-        exportFormat !== currentRequestedFormat
+        exportFormat !== currentRequestedFormat ||
+        exportType !== currentRequestedType
       ) {
         return
       }
@@ -784,24 +790,45 @@ export function ChangesPage() {
                 </p>
               </div>
 
-              {/* Format selection */}
-              <div className="format-toggle-group" role="group" aria-label="Export format">
-                <button
-                  type="button"
-                  className={`format-btn ${exportFormat === 'json' ? 'active' : ''}`}
-                  onClick={() => setExportFormat('json')}
-                >
-                  <FileCode size={15} aria-hidden="true" />
-                  <span>JSON</span>
-                </button>
-                <button
-                  type="button"
-                  className={`format-btn ${exportFormat === 'csv' ? 'active' : ''}`}
-                  onClick={() => setExportFormat('csv')}
-                >
-                  <FileSpreadsheet size={15} aria-hidden="true" />
-                  <span>CSV</span>
-                </button>
+              {/* Export scope & format toggles */}
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
+                {!data.is_baseline && (
+                  <div className="format-toggle-group" role="group" aria-label="Export content type">
+                    <button
+                      type="button"
+                      className={`format-btn ${exportType === 'plan' ? 'active' : ''}`}
+                      onClick={() => setExportType('plan')}
+                    >
+                      <span>Full Schedule</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`format-btn ${exportType === 'changes' ? 'active' : ''}`}
+                      onClick={() => setExportType('changes')}
+                    >
+                      <span>Changes Summary</span>
+                    </button>
+                  </div>
+                )}
+
+                <div className="format-toggle-group" role="group" aria-label="Export format">
+                  <button
+                    type="button"
+                    className={`format-btn ${exportFormat === 'json' ? 'active' : ''}`}
+                    onClick={() => setExportFormat('json')}
+                  >
+                    <FileCode size={15} aria-hidden="true" />
+                    <span>JSON</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`format-btn ${exportFormat === 'csv' ? 'active' : ''}`}
+                    onClick={() => setExportFormat('csv')}
+                  >
+                    <FileSpreadsheet size={15} aria-hidden="true" />
+                    <span>CSV</span>
+                  </button>
+                </div>
               </div>
             </div>
 
