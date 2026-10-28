@@ -1,0 +1,8 @@
+{
+  "expected_revision": 1,
+  "items": [
+    {"question_id": "range-b1", "selected_option": "a", "hints_used": 0},
+    {"question_id": "range-b2", "selected_option": "b", "hints_used": 0},
+    {"question_id": "range-b3", "selected_option": "c", "hints_used": 0}
+  ]
+}

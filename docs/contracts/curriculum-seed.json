@@ -1,0 +1,472 @@
+{
+  "curriculum": {
+    "id": "python-foundations-v1",
+    "title": "Python Foundations",
+    "version": "1.0",
+    "status": "published",
+    "source_label": "LearnNova synthetic reference curriculum; team review required before demo"
+  },
+  "topics": [
+    {
+      "id": "variables",
+      "title": "Variables",
+      "objective": "Track assignment and current variable values",
+      "difficulty": 1,
+      "importance": 0.5,
+      "position": 1,
+      "prerequisites": [],
+      "learn_minutes": 10,
+      "practice_minutes": 10,
+      "check_minutes": 0
+    },
+    {
+      "id": "expressions",
+      "title": "Expressions",
+      "objective": "Evaluate simple arithmetic expressions",
+      "difficulty": 1,
+      "importance": 0.5,
+      "position": 2,
+      "prerequisites": [
+        "variables"
+      ],
+      "learn_minutes": 10,
+      "practice_minutes": 10,
+      "check_minutes": 0
+    },
+    {
+      "id": "conditions",
+      "title": "Conditions",
+      "objective": "Trace a simple conditional branch",
+      "difficulty": 2,
+      "importance": 0.5,
+      "position": 3,
+      "prerequisites": [
+        "expressions"
+      ],
+      "learn_minutes": 10,
+      "practice_minutes": 10,
+      "check_minutes": 0
+    },
+    {
+      "id": "loops",
+      "title": "Loops",
+      "objective": "Trace range bounds and accumulator updates",
+      "difficulty": 2,
+      "importance": 0.5,
+      "position": 4,
+      "prerequisites": [
+        "conditions"
+      ],
+      "learn_minutes": 15,
+      "practice_minutes": 20,
+      "check_minutes": 10
+    },
+    {
+      "id": "lists",
+      "title": "Lists",
+      "objective": "Read list values using zero-based indices",
+      "difficulty": 2,
+      "importance": 0.5,
+      "position": 5,
+      "prerequisites": [
+        "expressions"
+      ],
+      "learn_minutes": 10,
+      "practice_minutes": 10,
+      "check_minutes": 0
+    },
+    {
+      "id": "list-iteration",
+      "title": "List iteration",
+      "objective": "Trace iteration through list values",
+      "difficulty": 3,
+      "importance": 0.5,
+      "position": 6,
+      "prerequisites": [
+        "loops",
+        "lists"
+      ],
+      "learn_minutes": 15,
+      "practice_minutes": 15,
+      "check_minutes": 5
+    },
+    {
+      "id": "nested-loops",
+      "title": "Nested loops",
+      "objective": "Trace the order of nested-loop iterations",
+      "difficulty": 3,
+      "importance": 0.5,
+      "position": 7,
+      "prerequisites": [
+        "loops"
+      ],
+      "learn_minutes": 15,
+      "practice_minutes": 20,
+      "check_minutes": 5
+    },
+    {
+      "id": "functions",
+      "title": "Functions",
+      "objective": "Trace parameters and a returned value",
+      "difficulty": 3,
+      "importance": 0.5,
+      "position": 8,
+      "prerequisites": [
+        "expressions"
+      ],
+      "learn_minutes": 15,
+      "practice_minutes": 15,
+      "check_minutes": 5
+    }
+  ],
+  "skills": [
+    {
+      "id": "range-bounds",
+      "topic_id": "loops",
+      "title": "Range endpoints",
+      "objective": "Range endpoints on independent fresh examples"
+    },
+    {
+      "id": "accumulators",
+      "topic_id": "loops",
+      "title": "Accumulator updates",
+      "objective": "Accumulator updates on independent fresh examples"
+    },
+    {
+      "id": "list-indexing",
+      "topic_id": "lists",
+      "title": "List indexing",
+      "objective": "List indexing on independent fresh examples"
+    }
+  ],
+  "resources": [
+    {
+      "id": "resource-variables",
+      "topic_id": "variables",
+      "title": "Variables reference",
+      "body": "Assignment binds a name to a value. Reassigning the same name changes the value used by later statements. Trace statements in order and record the current value after each assignment.",
+      "source_label": "Original LearnNova reference example"
+    },
+    {
+      "id": "resource-expressions",
+      "topic_id": "expressions",
+      "title": "Expressions reference",
+      "body": "Evaluate multiplication before addition unless parentheses change grouping. Substitute the current variable values before calculating. Distinguish calculating an expression from assigning its result.",
+      "source_label": "Original LearnNova reference example"
+    },
+    {
+      "id": "resource-conditions",
+      "topic_id": "conditions",
+      "title": "Conditions reference",
+      "body": "A condition evaluates to true or false. An if branch executes when its condition is true; an else branch handles the other case. Trace the chosen branch, then continue with statements after the conditional.",
+      "source_label": "Original LearnNova reference example"
+    },
+    {
+      "id": "resource-loops",
+      "topic_id": "loops",
+      "title": "Loops reference",
+      "body": "For positive steps, range(start, stop) includes start and excludes stop. range(3) yields 0, 1, 2. An accumulator stores a result that changes each iteration. Use a table with iteration value and accumulator before/after the update.",
+      "source_label": "Original LearnNova reference example"
+    },
+    {
+      "id": "resource-lists",
+      "topic_id": "lists",
+      "title": "Lists reference",
+      "body": "Python lists preserve element order. Index 0 refers to the first element. Index -1 refers to the last element. len returns the number of elements. Do not confuse an element value with its index.",
+      "source_label": "Original LearnNova reference example"
+    },
+    {
+      "id": "resource-list-iteration",
+      "topic_id": "list-iteration",
+      "title": "List iteration reference",
+      "body": "A for loop over a list visits its values in order. A loop over range(len(items)) visits valid nonnegative index positions. Keep index and element value separate when explaining an output.",
+      "source_label": "Original LearnNova reference example"
+    },
+    {
+      "id": "resource-nested-loops",
+      "topic_id": "nested-loops",
+      "title": "Nested loops reference",
+      "body": "For each iteration of the outer loop, the inner loop executes its own iterations. Trace pairs of outer and inner values in order. For independent fixed loop lengths m and n, the body runs m times n times.",
+      "source_label": "Original LearnNova reference example"
+    },
+    {
+      "id": "resource-functions",
+      "topic_id": "functions",
+      "title": "Functions reference",
+      "body": "Calling a function binds argument values to its parameters and executes its body. return provides a value to the caller. Printing a value and returning it have different purposes; trace the call and the expression receiving the result.",
+      "source_label": "Original LearnNova reference example"
+    }
+  ],
+  "questions": [
+    {
+      "id": "range-b1",
+      "skill_id": "range-bounds",
+      "prompt": "What is list(range(1, 4))?",
+      "options": {
+        "a": "[1, 2, 3]",
+        "b": "[1, 2, 3, 4]",
+        "c": "[0, 1, 2, 3]"
+      },
+      "answer_option": "a",
+      "explanation": "The positive-step stop value 4 is excluded.",
+      "difficulty": 1,
+      "form": "baseline",
+      "reviewed": false
+    },
+    {
+      "id": "range-b2",
+      "skill_id": "range-bounds",
+      "prompt": "What is len(range(2, 5))?",
+      "options": {
+        "a": "2",
+        "b": "3",
+        "c": "4"
+      },
+      "answer_option": "b",
+      "explanation": "The values are 2, 3, 4: three values.",
+      "difficulty": 1,
+      "form": "baseline",
+      "reviewed": false
+    },
+    {
+      "id": "range-b3",
+      "skill_id": "range-bounds",
+      "prompt": "What is list(range(3))?",
+      "options": {
+        "a": "[1, 2, 3]",
+        "b": "[0, 1, 2, 3]",
+        "c": "[0, 1, 2]"
+      },
+      "answer_option": "c",
+      "explanation": "A single-argument range starts at zero and excludes 3.",
+      "difficulty": 1,
+      "form": "baseline",
+      "reviewed": false
+    },
+    {
+      "id": "range-f1",
+      "skill_id": "range-bounds",
+      "prompt": "What is list(range(4, 7))?",
+      "options": {
+        "a": "[4, 5, 6]",
+        "b": "[4, 5, 6, 7]",
+        "c": "[5, 6, 7]"
+      },
+      "answer_option": "a",
+      "explanation": "Start 4 is included; stop 7 is excluded.",
+      "difficulty": 1,
+      "form": "followup",
+      "reviewed": false
+    },
+    {
+      "id": "range-f2",
+      "skill_id": "range-bounds",
+      "prompt": "What is len(range(8, 11))?",
+      "options": {
+        "a": "2",
+        "b": "3",
+        "c": "4"
+      },
+      "answer_option": "b",
+      "explanation": "The values are 8, 9, 10: three values.",
+      "difficulty": 1,
+      "form": "followup",
+      "reviewed": false
+    },
+    {
+      "id": "range-f3",
+      "skill_id": "range-bounds",
+      "prompt": "What is list(range(7, 10))?",
+      "options": {
+        "a": "[7, 8, 9]",
+        "b": "[7, 8, 9, 10]",
+        "c": "[8, 9, 10]"
+      },
+      "answer_option": "a",
+      "explanation": "Start 7 is included and stop 10 is excluded.",
+      "difficulty": 1,
+      "form": "followup",
+      "reviewed": false
+    },
+    {
+      "id": "acc-b1",
+      "skill_id": "accumulators",
+      "prompt": "total = 0\nfor i in range(1, 4):\n    total += i\nWhat is total?",
+      "options": {
+        "a": "6",
+        "b": "9",
+        "c": "10"
+      },
+      "answer_option": "a",
+      "explanation": "The updates add 1, then 2, then 3.",
+      "difficulty": 1,
+      "form": "baseline",
+      "reviewed": false
+    },
+    {
+      "id": "acc-b2",
+      "skill_id": "accumulators",
+      "prompt": "total = 2\nfor i in range(3):\n    total += 2\nWhat is total?",
+      "options": {
+        "a": "6",
+        "b": "8",
+        "c": "10"
+      },
+      "answer_option": "b",
+      "explanation": "Start at 2 and add 2 on three iterations: 8.",
+      "difficulty": 1,
+      "form": "baseline",
+      "reviewed": false
+    },
+    {
+      "id": "acc-b3",
+      "skill_id": "accumulators",
+      "prompt": "total = 1\nfor i in range(1, 4):\n    total *= 2\nWhat is total?",
+      "options": {
+        "a": "4",
+        "b": "6",
+        "c": "8"
+      },
+      "answer_option": "c",
+      "explanation": "Three multiplications by 2 change 1 to 2, 4, 8.",
+      "difficulty": 1,
+      "form": "baseline",
+      "reviewed": false
+    },
+    {
+      "id": "acc-f1",
+      "skill_id": "accumulators",
+      "prompt": "total = 0\nfor i in range(2, 5):\n    total += i\nWhat is total?",
+      "options": {
+        "a": "9",
+        "b": "10",
+        "c": "14"
+      },
+      "answer_option": "a",
+      "explanation": "The accumulator adds 2, 3 and 4.",
+      "difficulty": 1,
+      "form": "followup",
+      "reviewed": false
+    },
+    {
+      "id": "acc-f2",
+      "skill_id": "accumulators",
+      "prompt": "total = 3\nfor i in range(2):\n    total += 4\nWhat is total?",
+      "options": {
+        "a": "7",
+        "b": "11",
+        "c": "15"
+      },
+      "answer_option": "b",
+      "explanation": "Two additions of 4 to 3 give 11.",
+      "difficulty": 1,
+      "form": "followup",
+      "reviewed": false
+    },
+    {
+      "id": "acc-f3",
+      "skill_id": "accumulators",
+      "prompt": "total = 1\nfor i in range(3):\n    total *= 3\nWhat is total?",
+      "options": {
+        "a": "9",
+        "b": "18",
+        "c": "27"
+      },
+      "answer_option": "c",
+      "explanation": "The values are 3, 9, 27 after three updates.",
+      "difficulty": 1,
+      "form": "followup",
+      "reviewed": false
+    },
+    {
+      "id": "list-b1",
+      "skill_id": "list-indexing",
+      "prompt": "numbers = [10, 20, 30]\nWhat is numbers[0]?",
+      "options": {
+        "a": "10",
+        "b": "20",
+        "c": "30"
+      },
+      "answer_option": "a",
+      "explanation": "Zero refers to the first element.",
+      "difficulty": 1,
+      "form": "baseline",
+      "reviewed": false
+    },
+    {
+      "id": "list-b2",
+      "skill_id": "list-indexing",
+      "prompt": "colors = [\"red\", \"blue\", \"green\"]\nWhat is colors[2]?",
+      "options": {
+        "a": "red",
+        "b": "blue",
+        "c": "green"
+      },
+      "answer_option": "c",
+      "explanation": "Index 2 refers to the third element.",
+      "difficulty": 1,
+      "form": "baseline",
+      "reviewed": false
+    },
+    {
+      "id": "list-b3",
+      "skill_id": "list-indexing",
+      "prompt": "What is len([4, 8])?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3"
+      },
+      "answer_option": "b",
+      "explanation": "There are two elements.",
+      "difficulty": 1,
+      "form": "baseline",
+      "reviewed": false
+    },
+    {
+      "id": "list-f1",
+      "skill_id": "list-indexing",
+      "prompt": "items = [7, 9, 11]\nWhat is items[1]?",
+      "options": {
+        "a": "7",
+        "b": "9",
+        "c": "11"
+      },
+      "answer_option": "b",
+      "explanation": "Index 1 refers to the second element.",
+      "difficulty": 1,
+      "form": "followup",
+      "reviewed": false
+    },
+    {
+      "id": "list-f2",
+      "skill_id": "list-indexing",
+      "prompt": "items = [2, 4, 6]\nWhat is items[-1]?",
+      "options": {
+        "a": "2",
+        "b": "4",
+        "c": "6"
+      },
+      "answer_option": "c",
+      "explanation": "Negative index -1 refers to the last element.",
+      "difficulty": 1,
+      "form": "followup",
+      "reviewed": false
+    },
+    {
+      "id": "list-f3",
+      "skill_id": "list-indexing",
+      "prompt": "items = [\"a\", \"b\", \"c\", \"d\"]\nWhat is len(items)?",
+      "options": {
+        "a": "3",
+        "b": "4",
+        "c": "5"
+      },
+      "answer_option": "b",
+      "explanation": "There are four elements.",
+      "difficulty": 1,
+      "form": "followup",
+      "reviewed": false
+    }
+  ]
+}

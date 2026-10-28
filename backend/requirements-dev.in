@@ -1,0 +1,5 @@
+-r requirements.in
+pytest>=8,<10
+jsonschema>=4,<5
+sqlacodegen>=3,<4
+

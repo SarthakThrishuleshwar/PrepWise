@@ -1,0 +1,18 @@
+{
+  "expected_revision": 0,
+  "curriculum_id": "python-foundations-v1",
+  "title": "Prepare programming foundations",
+  "goal_text": "Understand and trace loops before my assessment",
+  "start_date": "2026-10-28",
+  "deadline": "2026-11-03",
+  "targets": [{"topic_id": "loops", "self_report": "low"}],
+  "availability": [
+    {"date": "2026-10-28", "minutes": 60},
+    {"date": "2026-10-29", "minutes": 60},
+    {"date": "2026-10-30", "minutes": 60},
+    {"date": "2026-10-31", "minutes": 60},
+    {"date": "2026-11-01", "minutes": 60},
+    {"date": "2026-11-02", "minutes": 60},
+    {"date": "2026-11-03", "minutes": 60}
+  ]
+}

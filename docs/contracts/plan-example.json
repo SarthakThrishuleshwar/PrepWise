@@ -1,0 +1,289 @@
+{
+  "plan_id": "reference-plan-v1",
+  "goal_id": "reference-goal",
+  "version": 1,
+  "parent_plan_id": null,
+  "input_revision": 1,
+  "current_revision": 1,
+  "is_stale": false,
+  "algorithm_version": "greedy-dag-v1",
+  "policy_version": "evidence-v1",
+  "created_at": "2026-10-28T06:00:00Z",
+  "feasibility": "full",
+  "generation_status": "template_only",
+  "origin_counts": {
+    "generated": 0,
+    "template": 9,
+    "cache": 0
+  },
+  "metrics": {
+    "capacity_minutes": 420,
+    "remaining_work_minutes": 105,
+    "scheduled_minutes": 105,
+    "deferred_minutes": 0,
+    "minute_shortfall": 0,
+    "placement_conflict_count": 0
+  },
+  "entries": [
+    {
+      "entry_id": "entry-1",
+      "work_item_id": "variables:learn:01",
+      "topic_id": "variables",
+      "activity_kind": "learn",
+      "date": "2026-10-28",
+      "sequence": 1,
+      "duration_minutes": 10,
+      "activity": {
+        "title": "Learn Variables",
+        "steps": [
+          "Read the variables reference.",
+          "Trace x = 2 followed by x = x + 3; explain the value after each statement."
+        ],
+        "expected_outcome": "Track assignment and current variable values",
+        "resource_ids": [
+          "resource-variables"
+        ],
+        "origin": "template",
+        "model_id": null,
+        "context_hash": "reference-only-variables:learn:01",
+        "validation_status": "reference_example"
+      },
+      "reason_code": "PREREQUISITE",
+      "reason_details": {
+        "target_topic_id": "loops"
+      }
+    },
+    {
+      "entry_id": "entry-2",
+      "work_item_id": "variables:practice:01",
+      "topic_id": "variables",
+      "activity_kind": "practice",
+      "date": "2026-10-28",
+      "sequence": 2,
+      "duration_minutes": 10,
+      "activity": {
+        "title": "Practice Variables",
+        "steps": [
+          "Trace y = 4 followed by y = y * 2.",
+          "Create a second reassignment example and record each intermediate value."
+        ],
+        "expected_outcome": "Track assignment and current variable values",
+        "resource_ids": [
+          "resource-variables"
+        ],
+        "origin": "template",
+        "model_id": null,
+        "context_hash": "reference-only-variables:practice:01",
+        "validation_status": "reference_example"
+      },
+      "reason_code": "PREREQUISITE",
+      "reason_details": {
+        "target_topic_id": "loops"
+      }
+    },
+    {
+      "entry_id": "entry-3",
+      "work_item_id": "expressions:learn:01",
+      "topic_id": "expressions",
+      "activity_kind": "learn",
+      "date": "2026-10-28",
+      "sequence": 3,
+      "duration_minutes": 10,
+      "activity": {
+        "title": "Learn Expressions",
+        "steps": [
+          "Read the expressions reference.",
+          "Compare 2 + 3 * 4 with (2 + 3) * 4 and explain the order of evaluation."
+        ],
+        "expected_outcome": "Evaluate simple arithmetic expressions",
+        "resource_ids": [
+          "resource-expressions"
+        ],
+        "origin": "template",
+        "model_id": null,
+        "context_hash": "reference-only-expressions:learn:01",
+        "validation_status": "reference_example"
+      },
+      "reason_code": "PREREQUISITE",
+      "reason_details": {
+        "target_topic_id": "loops"
+      }
+    },
+    {
+      "entry_id": "entry-4",
+      "work_item_id": "expressions:practice:01",
+      "topic_id": "expressions",
+      "activity_kind": "practice",
+      "date": "2026-10-28",
+      "sequence": 4,
+      "duration_minutes": 10,
+      "activity": {
+        "title": "Practice Expressions",
+        "steps": [
+          "For a = 3 and b = 2, evaluate a + b * 4.",
+          "Evaluate (a + b) * 4 and explain the difference."
+        ],
+        "expected_outcome": "Evaluate simple arithmetic expressions",
+        "resource_ids": [
+          "resource-expressions"
+        ],
+        "origin": "template",
+        "model_id": null,
+        "context_hash": "reference-only-expressions:practice:01",
+        "validation_status": "reference_example"
+      },
+      "reason_code": "PREREQUISITE",
+      "reason_details": {
+        "target_topic_id": "loops"
+      }
+    },
+    {
+      "entry_id": "entry-5",
+      "work_item_id": "conditions:learn:01",
+      "topic_id": "conditions",
+      "activity_kind": "learn",
+      "date": "2026-10-28",
+      "sequence": 5,
+      "duration_minutes": 10,
+      "activity": {
+        "title": "Learn Conditions",
+        "steps": [
+          "Read the conditions reference.",
+          "Trace an if/else that prints pass when score >= 5 and retry otherwise, using score = 7."
+        ],
+        "expected_outcome": "Trace a simple conditional branch",
+        "resource_ids": [
+          "resource-conditions"
+        ],
+        "origin": "template",
+        "model_id": null,
+        "context_hash": "reference-only-conditions:learn:01",
+        "validation_status": "reference_example"
+      },
+      "reason_code": "PREREQUISITE",
+      "reason_details": {
+        "target_topic_id": "loops"
+      }
+    },
+    {
+      "entry_id": "entry-6",
+      "work_item_id": "conditions:practice:01",
+      "topic_id": "conditions",
+      "activity_kind": "practice",
+      "date": "2026-10-28",
+      "sequence": 6,
+      "duration_minutes": 10,
+      "activity": {
+        "title": "Practice Conditions",
+        "steps": [
+          "Trace the same branch for scores 0, 5 and 8.",
+          "Explain how replacing >= with > changes the boundary case."
+        ],
+        "expected_outcome": "Trace a simple conditional branch",
+        "resource_ids": [
+          "resource-conditions"
+        ],
+        "origin": "template",
+        "model_id": null,
+        "context_hash": "reference-only-conditions:practice:01",
+        "validation_status": "reference_example"
+      },
+      "reason_code": "PREREQUISITE",
+      "reason_details": {
+        "target_topic_id": "loops"
+      }
+    },
+    {
+      "entry_id": "entry-7",
+      "work_item_id": "loops:learn:01",
+      "topic_id": "loops",
+      "activity_kind": "learn",
+      "date": "2026-10-29",
+      "sequence": 1,
+      "duration_minutes": 15,
+      "activity": {
+        "title": "Learn Loops",
+        "steps": [
+          "Read the loops reference.",
+          "Write the values produced by range(1, 4) and range(3), then explain the excluded endpoint."
+        ],
+        "expected_outcome": "Trace range bounds and accumulator updates",
+        "resource_ids": [
+          "resource-loops"
+        ],
+        "origin": "template",
+        "model_id": null,
+        "context_hash": "reference-only-loops:learn:01",
+        "validation_status": "reference_example"
+      },
+      "reason_code": "INITIAL_GOAL",
+      "reason_details": {
+        "target_topic_id": "loops"
+      }
+    },
+    {
+      "entry_id": "entry-8",
+      "work_item_id": "loops:practice:01",
+      "topic_id": "loops",
+      "activity_kind": "practice",
+      "date": "2026-10-29",
+      "sequence": 2,
+      "duration_minutes": 20,
+      "activity": {
+        "title": "Practice Loops",
+        "steps": [
+          "Build a trace table for total = 0 followed by adding each i in range(1, 4).",
+          "Create a new start/stop pair and repeat without looking at the first table."
+        ],
+        "expected_outcome": "Trace range bounds and accumulator updates",
+        "resource_ids": [
+          "resource-loops"
+        ],
+        "origin": "template",
+        "model_id": null,
+        "context_hash": "reference-only-loops:practice:01",
+        "validation_status": "reference_example"
+      },
+      "reason_code": "INITIAL_GOAL",
+      "reason_details": {
+        "target_topic_id": "loops"
+      }
+    },
+    {
+      "entry_id": "entry-9",
+      "work_item_id": "loops:assess:01",
+      "topic_id": "loops",
+      "activity_kind": "assess",
+      "date": "2026-10-29",
+      "sequence": 3,
+      "duration_minutes": 10,
+      "activity": {
+        "title": "Assess Loops",
+        "steps": [
+          "Use fresh reviewed range-boundary questions if the question bank has been approved.",
+          "Otherwise explain a new range example as an unscored self-check; do not label it assessed mastery."
+        ],
+        "expected_outcome": "Trace range bounds and accumulator updates",
+        "resource_ids": [
+          "resource-loops"
+        ],
+        "origin": "template",
+        "model_id": null,
+        "context_hash": "reference-only-loops:assess:01",
+        "validation_status": "reference_example"
+      },
+      "reason_code": "INITIAL_GOAL",
+      "reason_details": {
+        "target_topic_id": "loops"
+      }
+    }
+  ],
+  "deferred": [],
+  "completed_history": [],
+  "assumptions": [
+    "Reference template-only example; not a live model run.",
+    "No assessment evidence exists.",
+    "Question examples remain unreviewed until team approval.",
+    "Durations are curriculum estimates."
+  ]
+}
