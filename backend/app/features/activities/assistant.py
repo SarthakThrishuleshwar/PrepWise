@@ -24,6 +24,7 @@ from app.db.models import (
     Attempts,
     StudentSkillState,
     PlanChanges,
+    ResourceUploads,
 )
 from app.providers.gateway import ModelGateway
 
@@ -223,13 +224,31 @@ class LearningAssistant:
     def _resolve_resources_context(self, session, student_id: str, query: AssistantQuery) -> ContextPack:
         resource_id = query.resource_id
         resource = None
+        upload = None
         if resource_id:
             resource = session.execute(select(Resources).where(Resources.id == resource_id)).scalar_one_or_none()
-        if not resource:
-            # Default to first resource
+            if not resource:
+                upload = session.execute(select(ResourceUploads).where(ResourceUploads.id == resource_id)).scalar_one_or_none()
+            if not resource and not upload:
+                return ContextPack(
+                    section=AssistantSection.RESOURCES,
+                    scope_display=f"Resource: {resource_id}",
+                    structured_facts=[
+                        f"Resource '{resource_id}' was not found in curriculum or uploaded resources.",
+                        "Please check the resource identifier or upload the document in the Curriculum view."
+                    ],
+                    retrieved_passages=[],
+                    allowed_locators=[],
+                    unsupported_in_resource=True,
+                    starter_questions=["What resources are available?"],
+                    suggested_actions=[SuggestedAction(label="View Curriculum", path="/curriculum", action_type="navigate")]
+                )
+        else:
             resource = session.execute(select(Resources).order_by(Resources.id)).scalars().first()
+            if not resource:
+                upload = session.execute(select(ResourceUploads).order_by(ResourceUploads.created_at.desc())).scalars().first()
 
-        if not resource:
+        if not resource and not upload:
             return ContextPack(
                 section=AssistantSection.RESOURCES,
                 scope_display="Resources",
@@ -240,27 +259,39 @@ class LearningAssistant:
                 suggested_actions=[SuggestedAction(label="View Curriculum", path="/curriculum", action_type="navigate")]
             )
 
-        facts = [
-            f"Resource Title: {resource.title}",
-            f"Source Label: {resource.source_label}",
-            f"Linked Topic ID: {resource.topic_id}",
-        ]
+        if resource:
+            facts = [
+                f"Resource Title: {resource.title}",
+                f"Source Label: {resource.source_label}",
+                f"Linked Topic ID: {resource.topic_id}",
+            ]
+            chunks = chunk_text(resource.body)
+            title = resource.title
+        else:
+            facts = [
+                f"Resource Title: {upload.title or upload.original_filename}",
+                f"Original Filename: {upload.original_filename}",
+                f"Upload Status: {upload.processing_status}",
+            ]
+            if upload.topic_id:
+                facts.append(f"Linked Topic ID: {upload.topic_id}")
+            chunks = chunk_text(upload.extracted_text or "")
+            title = upload.title or upload.original_filename
 
-        chunks = chunk_text(resource.body)
         passages = []
         locators = []
         for i, c in enumerate(chunks):
-            loc = f"{resource.title} - Section {i+1}"
+            loc = f"{title} - Section {i+1}"
             locators.append(loc)
             passages.append({
-                "title": resource.title,
+                "title": title,
                 "locator": loc,
                 "text": c,
                 "link": "/curriculum"
             })
 
         starter_questions = [
-            f"Summarize the key points of {resource.title}.",
+            f"Summarize the key points of {title}.",
             "What practical syntax does this document recommend?",
             "Can you explain the formula or rule shown here?",
         ]
@@ -272,7 +303,7 @@ class LearningAssistant:
 
         return ContextPack(
             section=AssistantSection.RESOURCES,
-            scope_display=f"Resource: {resource.title}",
+            scope_display=f"Resource: {title}",
             structured_facts=facts,
             retrieved_passages=passages,
             allowed_locators=locators,

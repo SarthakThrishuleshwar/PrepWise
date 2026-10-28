@@ -209,6 +209,585 @@
         }
       }
     },
+    "/api/v1/curricula/projects": {
+      "post": {
+        "tags": [
+          "curriculum"
+        ],
+        "summary": "Create Project",
+        "operationId": "create_project_api_v1_curricula_projects_post",
+        "parameters": [
+          {
+            "name": "X-Local-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Local-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectPublic"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "curriculum"
+        ],
+        "summary": "List Projects",
+        "operationId": "list_projects_api_v1_curricula_projects_get",
+        "parameters": [
+          {
+            "name": "X-Local-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Local-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProjectPublic"
+                  },
+                  "title": "Response List Projects Api V1 Curricula Projects Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/curricula/projects/{project_id}": {
+      "get": {
+        "tags": [
+          "curriculum"
+        ],
+        "summary": "Get Project",
+        "operationId": "get_project_api_v1_curricula_projects__project_id__get",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "X-Local-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Local-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectPublic"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/curricula/projects/{project_id}/scope": {
+      "put": {
+        "tags": [
+          "curriculum"
+        ],
+        "summary": "Save Study Scope",
+        "operationId": "save_study_scope_api_v1_curricula_projects__project_id__scope_put",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "X-Local-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Local-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudyScopeSave"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudyScopeSelection"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "curriculum"
+        ],
+        "summary": "Get Study Scope",
+        "operationId": "get_study_scope_api_v1_curricula_projects__project_id__scope_get",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "X-Local-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Local-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudyScopeSelection"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/curricula/resources/upload": {
+      "post": {
+        "tags": [
+          "curriculum"
+        ],
+        "summary": "Upload Resource",
+        "operationId": "upload_resource_api_v1_curricula_resources_upload_post",
+        "parameters": [
+          {
+            "name": "X-Local-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Local-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_resource_api_v1_curricula_resources_upload_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadedResourceDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/curricula/resources": {
+      "get": {
+        "tags": [
+          "curriculum"
+        ],
+        "summary": "List Resources",
+        "operationId": "list_resources_api_v1_curricula_resources_get",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "X-Local-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Local-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ResourcePreview"
+                  },
+                  "title": "Response List Resources Api V1 Curricula Resources Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/curricula/resources/{resource_id}/preview": {
+      "get": {
+        "tags": [
+          "curriculum"
+        ],
+        "summary": "Get Resource Preview",
+        "operationId": "get_resource_preview_api_v1_curricula_resources__resource_id__preview_get",
+        "parameters": [
+          {
+            "name": "resource_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Resource Id"
+            }
+          },
+          {
+            "name": "X-Local-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Local-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourcePreview"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/curricula/retrieval": {
+      "get": {
+        "tags": [
+          "curriculum"
+        ],
+        "summary": "Test Retrieval",
+        "operationId": "test_retrieval_api_v1_curricula_retrieval_get",
+        "parameters": [
+          {
+            "name": "topic_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "title": "Topic Id"
+            }
+          },
+          {
+            "name": "objective",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "title": "Objective"
+            }
+          },
+          {
+            "name": "curriculum_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Curriculum Id"
+            }
+          },
+          {
+            "name": "k",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 10,
+              "minimum": 1,
+              "default": 3,
+              "title": "K"
+            }
+          },
+          {
+            "name": "X-Local-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Local-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ResourceMatch"
+                  },
+                  "title": "Response Test Retrieval Api V1 Curricula Retrieval Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/curricula/{curriculum_id}": {
       "get": {
         "tags": [
@@ -378,8 +957,8 @@
         "tags": [
           "planning"
         ],
-        "summary": "Patch Goal",
-        "operationId": "patch_goal_api_v1_goals__goal_id__patch",
+        "summary": "Update Goal",
+        "operationId": "update_goal_api_v1_goals__goal_id__patch",
         "parameters": [
           {
             "name": "goal_id",
@@ -405,8 +984,29 @@
               ],
               "title": "X-Local-Token"
             }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "title": "Idempotency-Key"
+            }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoalUpdate"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -511,8 +1111,8 @@
         "tags": [
           "planning"
         ],
-        "summary": "Create Plan Job",
-        "operationId": "create_plan_job_api_v1_goals__goal_id__plan_jobs_post",
+        "summary": "Plan Jobs",
+        "operationId": "plan_jobs_api_v1_goals__goal_id__plan_jobs_post",
         "parameters": [
           {
             "name": "goal_id",
@@ -552,6 +1152,62 @@
         },
         "responses": {
           "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/goals/{goal_id}/plans": {
+      "get": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "List Plans",
+        "operationId": "list_plans_api_v1_goals__goal_id__plans_get",
+        "parameters": [
+          {
+            "name": "goal_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Goal Id"
+            }
+          },
+          {
+            "name": "X-Local-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Local-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
@@ -2061,6 +2717,64 @@
         ],
         "title": "AvailabilityReplace"
       },
+      "Body_upload_resource_api_v1_curricula_resources_upload_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Id"
+          },
+          "curriculum_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Curriculum Id"
+          },
+          "topic_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Topic Id"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_resource_api_v1_curricula_resources_upload_post"
+      },
       "ChatMessage": {
         "properties": {
           "role": {
@@ -2434,6 +3148,101 @@
         ],
         "title": "GoalCreate"
       },
+      "GoalUpdate": {
+        "properties": {
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Expected Revision"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Title"
+          },
+          "goal_text": {
+            "type": "string",
+            "maxLength": 1000,
+            "title": "Goal Text",
+            "default": ""
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Start Date"
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date",
+            "title": "Deadline"
+          },
+          "targets": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/TargetInput"
+                },
+                "type": "array",
+                "maxItems": 30
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Targets"
+          },
+          "availability": {
+            "items": {
+              "$ref": "#/components/schemas/AvailabilityInput"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Availability"
+          },
+          "max_session_minutes": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 45.0,
+                "minimum": 15.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Session Minutes",
+            "default": 25
+          },
+          "preferred_pace": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "balanced",
+                  "intensive",
+                  "relaxed"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferred Pace",
+            "default": "balanced"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "expected_revision",
+          "title",
+          "start_date",
+          "deadline",
+          "availability"
+        ],
+        "title": "GoalUpdate"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -2500,6 +3309,37 @@
               }
             ],
             "title": "Base Plan Id"
+          },
+          "max_session_minutes": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 45.0,
+                "minimum": 15.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Session Minutes",
+            "default": 25
+          },
+          "preferred_pace": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "balanced",
+                  "intensive",
+                  "relaxed"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferred Pace",
+            "default": "balanced"
           }
         },
         "additionalProperties": false,
@@ -2691,6 +3531,101 @@
           "hint_text"
         ],
         "title": "ProgressiveHint"
+      },
+      "ProjectCreate": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Title",
+            "description": "Project title"
+          },
+          "curriculum_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Curriculum Id",
+            "description": "Associated curriculum ID"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Optional project description"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "title",
+          "curriculum_id"
+        ],
+        "title": "ProjectCreate",
+        "description": "Request payload to create a learning project container."
+      },
+      "ProjectPublic": {
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "title": "Project Id"
+          },
+          "student_id": {
+            "type": "string",
+            "title": "Student Id"
+          },
+          "curriculum_id": {
+            "type": "string",
+            "title": "Curriculum Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          },
+          "resource_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Resource Count",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "project_id",
+          "student_id",
+          "curriculum_id",
+          "title",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ProjectPublic",
+        "description": "Public representation of an owned learning project."
       },
       "ProvenanceMetadata": {
         "properties": {
@@ -3099,6 +4034,87 @@
         ],
         "title": "ResourceMatch"
       },
+      "ResourcePreview": {
+        "properties": {
+          "resource_id": {
+            "type": "string",
+            "title": "Resource Id"
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Id"
+          },
+          "curriculum_id": {
+            "type": "string",
+            "title": "Curriculum Id"
+          },
+          "topic_id": {
+            "type": "string",
+            "title": "Topic Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "source_label": {
+            "type": "string",
+            "title": "Source Label"
+          },
+          "snippet": {
+            "type": "string",
+            "title": "Snippet"
+          },
+          "chunk_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Chunk Count",
+            "default": 0
+          },
+          "processing_status": {
+            "$ref": "#/components/schemas/ResourceProcessingStatus"
+          },
+          "byte_size": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Byte Size",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "resource_id",
+          "curriculum_id",
+          "topic_id",
+          "title",
+          "source_label",
+          "snippet",
+          "processing_status"
+        ],
+        "title": "ResourcePreview",
+        "description": "Compact summary of a resource for lists and previews."
+      },
+      "ResourceProcessingStatus": {
+        "type": "string",
+        "enum": [
+          "received",
+          "extracting",
+          "extracted",
+          "embedding",
+          "indexed",
+          "failed",
+          "archived"
+        ],
+        "title": "ResourceProcessingStatus",
+        "description": "Actual runtime processing states for uploaded resources.\n\nNo fake percentages or speculative states."
+      },
       "SelfReport": {
         "type": "string",
         "enum": [
@@ -3166,6 +4182,72 @@
           "evidence_status"
         ],
         "title": "SkillEvidence"
+      },
+      "SourceChunk": {
+        "properties": {
+          "chunk_id": {
+            "type": "string",
+            "title": "Chunk Id"
+          },
+          "resource_id": {
+            "type": "string",
+            "title": "Resource Id"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Text"
+          },
+          "source_label": {
+            "type": "string",
+            "title": "Source Label"
+          },
+          "page_number": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Number"
+          },
+          "section_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Section Title"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Sequence",
+            "default": 1
+          },
+          "token_estimate": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Token Estimate",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "chunk_id",
+          "resource_id",
+          "text",
+          "source_label"
+        ],
+        "title": "SourceChunk",
+        "description": "Granular retrieval unit within a resource, preserving provenance."
       },
       "SourceReference": {
         "properties": {
@@ -3415,6 +4497,112 @@
         "type": "object",
         "title": "StudyPackageRequest"
       },
+      "StudyScopeSave": {
+        "properties": {
+          "selected_topic_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Selected Topic Ids",
+            "description": "At least one target topic is required"
+          },
+          "selected_resource_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Selected Resource Ids",
+            "description": "Optional specific resources chosen"
+          },
+          "free_text_request": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Free Text Request",
+            "description": "Optional raw study inquiry"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "selected_topic_ids"
+        ],
+        "title": "StudyScopeSave",
+        "description": "Student study scope selection linking topics, resources, and free-text queries."
+      },
+      "StudyScopeSelection": {
+        "properties": {
+          "selection_id": {
+            "type": "string",
+            "title": "Selection Id"
+          },
+          "project_id": {
+            "type": "string",
+            "title": "Project Id"
+          },
+          "student_id": {
+            "type": "string",
+            "title": "Student Id"
+          },
+          "selected_topic_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Selected Topic Ids"
+          },
+          "selected_resource_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Selected Resource Ids"
+          },
+          "free_text_request": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Free Text Request"
+          },
+          "unresolved_queries": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Unresolved Queries",
+            "description": "Queries not matched to known curriculum"
+          },
+          "confirmed_at": {
+            "type": "string",
+            "title": "Confirmed At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "selection_id",
+          "project_id",
+          "student_id",
+          "selected_topic_ids",
+          "selected_resource_ids",
+          "confirmed_at"
+        ],
+        "title": "StudyScopeSelection",
+        "description": "Saved, confirmed study scope ready to hand over to Person 3 (Planning)."
+      },
       "SuggestedAction": {
         "properties": {
           "label": {
@@ -3515,6 +4703,94 @@
           "resources"
         ],
         "title": "TaskContext"
+      },
+      "UploadedResourceDetail": {
+        "properties": {
+          "resource_id": {
+            "type": "string",
+            "title": "Resource Id"
+          },
+          "project_id": {
+            "type": "string",
+            "title": "Project Id"
+          },
+          "curriculum_id": {
+            "type": "string",
+            "title": "Curriculum Id"
+          },
+          "topic_id": {
+            "type": "string",
+            "title": "Topic Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "source_label": {
+            "type": "string",
+            "title": "Source Label"
+          },
+          "original_filename": {
+            "type": "string",
+            "title": "Original Filename"
+          },
+          "mime_type": {
+            "type": "string",
+            "title": "Mime Type"
+          },
+          "byte_size": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Byte Size"
+          },
+          "content_hash": {
+            "type": "string",
+            "title": "Content Hash"
+          },
+          "processing_status": {
+            "$ref": "#/components/schemas/ResourceProcessingStatus"
+          },
+          "error_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Message"
+          },
+          "chunks": {
+            "items": {
+              "$ref": "#/components/schemas/SourceChunk"
+            },
+            "type": "array",
+            "title": "Chunks"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "resource_id",
+          "project_id",
+          "curriculum_id",
+          "topic_id",
+          "title",
+          "source_label",
+          "original_filename",
+          "mime_type",
+          "byte_size",
+          "content_hash",
+          "processing_status",
+          "created_at"
+        ],
+        "title": "UploadedResourceDetail",
+        "description": "Detailed metadata and chunks for an uploaded or authored resource."
       },
       "ValidationError": {
         "properties": {

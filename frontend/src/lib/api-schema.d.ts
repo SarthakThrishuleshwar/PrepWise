@@ -154,8 +154,8 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        /** Patch Goal */
-        patch: operations["patch_goal_api_v1_goals__goal_id__patch"];
+        /** Update Goal */
+        patch: operations["update_goal_api_v1_goals__goal_id__patch"];
         trace?: never;
     };
     "/api/v1/goals/{goal_id}/availability": {
@@ -184,8 +184,25 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create Plan Job */
-        post: operations["create_plan_job_api_v1_goals__goal_id__plan_jobs_post"];
+        /** Plan Jobs */
+        post: operations["plan_jobs_api_v1_goals__goal_id__plan_jobs_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/goals/{goal_id}/plans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Plans */
+        get: operations["list_plans_api_v1_goals__goal_id__plans_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -810,6 +827,42 @@ export interface components {
             /** Availability */
             availability: components["schemas"]["AvailabilityInput"][];
         };
+        /** GoalUpdate */
+        GoalUpdate: {
+            /** Expected Revision */
+            expected_revision: number;
+            /** Title */
+            title: string;
+            /**
+             * Goal Text
+             * @default
+             */
+            goal_text: string;
+            /**
+             * Start Date
+             * Format: date
+             */
+            start_date: string;
+            /**
+             * Deadline
+             * Format: date
+             */
+            deadline: string;
+            /** Targets */
+            targets?: components["schemas"]["TargetInput"][] | null;
+            /** Availability */
+            availability: components["schemas"]["AvailabilityInput"][];
+            /**
+             * Max Session Minutes
+             * @default 25
+             */
+            max_session_minutes: number | null;
+            /**
+             * Preferred Pace
+             * @default balanced
+             */
+            preferred_pace: ("balanced" | "intensive" | "relaxed") | null;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -835,6 +888,16 @@ export interface components {
             mode: "generate" | "replan";
             /** Base Plan Id */
             base_plan_id?: string | null;
+            /**
+             * Max Session Minutes
+             * @default 25
+             */
+            max_session_minutes: number | null;
+            /**
+             * Preferred Pace
+             * @default balanced
+             */
+            preferred_pace: ("balanced" | "intensive" | "relaxed") | null;
         };
         /** PracticeTask */
         PracticeTask: {
@@ -1541,18 +1604,23 @@ export interface operations {
             };
         };
     };
-    patch_goal_api_v1_goals__goal_id__patch: {
+    update_goal_api_v1_goals__goal_id__patch: {
         parameters: {
             query?: never;
-            header?: {
+            header: {
                 "X-Local-Token"?: string | null;
+                "Idempotency-Key": string;
             };
             path: {
                 goal_id: string;
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GoalUpdate"];
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {
@@ -1612,7 +1680,7 @@ export interface operations {
             };
         };
     };
-    create_plan_job_api_v1_goals__goal_id__plan_jobs_post: {
+    plan_jobs_api_v1_goals__goal_id__plan_jobs_post: {
         parameters: {
             query?: never;
             header?: {
@@ -1631,6 +1699,39 @@ export interface operations {
         responses: {
             /** @description Successful Response */
             202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_plans_api_v1_goals__goal_id__plans_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Local-Token"?: string | null;
+            };
+            path: {
+                goal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };

@@ -1,0 +1,311 @@
+{
+  "plan_id": "1c433cac-0d9a-408d-b6b0-10594b5b7feb",
+  "goal_id": "7324869a-3af7-4cef-8e09-cc7ce2bd607e",
+  "version": 1,
+  "parent_plan_id": null,
+  "feasibility": "full",
+  "generation_status": "template_only",
+  "algorithm_version": "genetic-algorithm-v1",
+  "policy_version": "prototype-v1",
+  "created_at": "2026-10-28T10:43:42.263000+00:00",
+  "metrics": {
+    "capacity_minutes": 345,
+    "remaining_work_minutes": 104,
+    "scheduled_minutes": 104,
+    "deferred_minutes": 0,
+    "minute_shortfall": 0,
+    "placement_conflict_count": 0
+  },
+  "origin_counts": {
+    "template": 9
+  },
+  "entries": [
+    {
+      "entry_id": "3ecb2825-8bb0-4308-b5b7-c3f5ddf18e9c",
+      "work_item_id": "7324869a-3af7-4cef-8e09-cc7ce2bd607e:variables:learn:01",
+      "topic_id": "variables",
+      "activity_kind": "learn",
+      "date": "2026-10-28",
+      "sequence": 1,
+      "duration_minutes": 10,
+      "reason_code": "PREREQUISITE",
+      "reason_details": {
+        "unit_key": "variables:learn:01",
+        "duration": 10,
+        "topic_id": "variables",
+        "is_target": false
+      },
+      "activity": {
+        "title": "Variables: Learn",
+        "steps": [
+          "Review objective: Study core principles of Variables",
+          "Work through structured learn guide for Variables",
+          "Complete hands-on exercise (10 min)",
+          "Verify mastery against Study core principles of Variables"
+        ],
+        "expected_outcome": "Master Variables fundamentals through focused learn practice.",
+        "resource_ids": [],
+        "origin": "template",
+        "model_id": null,
+        "context_hash": "a0442742b5a701db",
+        "validation_status": "valid"
+      }
+    },
+    {
+      "entry_id": "93ed4abe-8175-437e-bc82-b736a90018b3",
+      "work_item_id": "7324869a-3af7-4cef-8e09-cc7ce2bd607e:variables:practice:01",
+      "topic_id": "variables",
+      "activity_kind": "practice",
+      "date": "2026-10-28",
+      "sequence": 2,
+      "duration_minutes": 10,
+      "reason_code": "PREREQUISITE",
+      "reason_details": {
+        "unit_key": "variables:practice:01",
+        "duration": 10,
+        "topic_id": "variables",
+        "is_target": false
+      },
+      "activity": {
+        "title": "Variables: Practice",
+        "steps": [
+          "Review objective: Study core principles of Variables",
+          "Work through structured practice guide for Variables",
+          "Complete hands-on exercise (10 min)",
+          "Verify mastery against Study core principles of Variables"
+        ],
+        "expected_outcome": "Master Variables fundamentals through focused practice practice.",
+        "resource_ids": [],
+        "origin": "template",
+        "model_id": null,
+        "context_hash": "378fca3d29cf2c82",
+        "validation_status": "valid"
+      }
+    },
+    {
+      "entry_id": "37baed66-d317-44fa-8c8c-a748bab48a36",
+      "work_item_id": "7324869a-3af7-4cef-8e09-cc7ce2bd607e:expressions:learn:01",
+      "topic_id": "expressions",
+      "activity_kind": "learn",
+      "date": "2026-10-29",
+      "sequence": 1,
+      "duration_minutes": 10,
+      "reason_code": "PREREQUISITE",
+      "reason_details": {
+        "unit_key": "expressions:learn:01",
+        "duration": 10,
+        "topic_id": "expressions",
+        "is_target": false
+      },
+      "activity": {
+        "title": "Expressions: Learn",
+        "steps": [
+          "Review objective: Study core principles of Expressions",
+          "Work through structured learn guide for Expressions",
+          "Complete hands-on exercise (10 min)",
+          "Verify mastery against Study core principles of Expressions"
+        ],
+        "expected_outcome": "Master Expressions fundamentals through focused learn practice.",
+        "resource_ids": [],
+        "origin": "template",
+        "model_id": null,
+        "context_hash": "534fa2b9bcb710af",
+        "validation_status": "valid"
+      }
+    },
+    {
+      "entry_id": "9259b96e-a22a-4ef5-b0a5-bce753952794",
+      "work_item_id": "7324869a-3af7-4cef-8e09-cc7ce2bd607e:expressions:practice:01",
+      "topic_id": "expressions",
+      "activity_kind": "practice",
+      "date": "2026-10-29",
+      "sequence": 2,
+      "duration_minutes": 10,
+      "reason_code": "PREREQUISITE",
+      "reason_details": {
+        "unit_key": "expressions:practice:01",
+        "duration": 10,
+        "topic_id": "expressions",
+        "is_target": false
+      },
+      "activity": {
+        "title": "Expressions: Practice",
+        "steps": [
+          "Review objective: Study core principles of Expressions",
+          "Work through structured practice guide for Expressions",
+          "Complete hands-on exercise (10 min)",
+          "Verify mastery against Study core principles of Expressions"
+        ],
+        "expected_outcome": "Master Expressions fundamentals through focused practice practice.",
+        "resource_ids": [],
+        "origin": "template",
+        "model_id": null,
+        "context_hash": "652d246bd15752c2",
+        "validation_status": "valid"
+      }
+    },
+    {
+      "entry_id": "66dafe94-a6da-4d28-9581-1f8feee93e69",
+      "work_item_id": "7324869a-3af7-4cef-8e09-cc7ce2bd607e:conditions:learn:01",
+      "topic_id": "conditions",
+      "activity_kind": "learn",
+      "date": "2026-10-29",
+      "sequence": 3,
+      "duration_minutes": 10,
+      "reason_code": "GOAL_TARGET",
+      "reason_details": {
+        "unit_key": "conditions:learn:01",
+        "duration": 10,
+        "topic_id": "conditions",
+        "is_target": true
+      },
+      "activity": {
+        "title": "Conditions: Learn",
+        "steps": [
+          "Review objective: Study core principles of Conditions",
+          "Work through structured learn guide for Conditions",
+          "Complete hands-on exercise (10 min)",
+          "Verify mastery against Study core principles of Conditions"
+        ],
+        "expected_outcome": "Master Conditions fundamentals through focused learn practice.",
+        "resource_ids": [],
+        "origin": "template",
+        "model_id": null,
+        "context_hash": "914283689b54f2bb",
+        "validation_status": "valid"
+      }
+    },
+    {
+      "entry_id": "d34b2c78-8c72-4cc0-81bf-75bfc4107137",
+      "work_item_id": "7324869a-3af7-4cef-8e09-cc7ce2bd607e:conditions:practice:01",
+      "topic_id": "conditions",
+      "activity_kind": "practice",
+      "date": "2026-10-29",
+      "sequence": 4,
+      "duration_minutes": 9,
+      "reason_code": "GOAL_TARGET",
+      "reason_details": {
+        "unit_key": "conditions:practice:01",
+        "duration": 9,
+        "topic_id": "conditions",
+        "is_target": true
+      },
+      "activity": {
+        "title": "Conditions: Practice",
+        "steps": [
+          "Review objective: Study core principles of Conditions",
+          "Work through structured practice guide for Conditions",
+          "Complete hands-on exercise (9 min)",
+          "Verify mastery against Study core principles of Conditions"
+        ],
+        "expected_outcome": "Master Conditions fundamentals through focused practice practice.",
+        "resource_ids": [],
+        "origin": "template",
+        "model_id": null,
+        "context_hash": "317c61856bfa2c0a",
+        "validation_status": "valid"
+      }
+    },
+    {
+      "entry_id": "0ad12ae1-c6ac-41a8-ba34-6d6967a9c102",
+      "work_item_id": "7324869a-3af7-4cef-8e09-cc7ce2bd607e:loops:learn:01",
+      "topic_id": "loops",
+      "activity_kind": "learn",
+      "date": "2026-10-31",
+      "sequence": 1,
+      "duration_minutes": 15,
+      "reason_code": "GOAL_TARGET",
+      "reason_details": {
+        "unit_key": "loops:learn:01",
+        "duration": 15,
+        "topic_id": "loops",
+        "is_target": true
+      },
+      "activity": {
+        "title": "Loops: Learn",
+        "steps": [
+          "Review objective: Study core principles of Loops",
+          "Work through structured learn guide for Loops",
+          "Complete hands-on exercise (15 min)",
+          "Verify mastery against Study core principles of Loops"
+        ],
+        "expected_outcome": "Master Loops fundamentals through focused learn practice.",
+        "resource_ids": [],
+        "origin": "template",
+        "model_id": null,
+        "context_hash": "9abbc53ee9cf3be2",
+        "validation_status": "valid"
+      }
+    },
+    {
+      "entry_id": "ac1eb7f2-7a3e-4970-aa1f-c0515d8f247f",
+      "work_item_id": "7324869a-3af7-4cef-8e09-cc7ce2bd607e:loops:practice:01",
+      "topic_id": "loops",
+      "activity_kind": "practice",
+      "date": "2026-10-31",
+      "sequence": 2,
+      "duration_minutes": 20,
+      "reason_code": "GOAL_TARGET",
+      "reason_details": {
+        "unit_key": "loops:practice:01",
+        "duration": 20,
+        "topic_id": "loops",
+        "is_target": true
+      },
+      "activity": {
+        "title": "Loops: Practice",
+        "steps": [
+          "Review objective: Study core principles of Loops",
+          "Work through structured practice guide for Loops",
+          "Complete hands-on exercise (20 min)",
+          "Verify mastery against Study core principles of Loops"
+        ],
+        "expected_outcome": "Master Loops fundamentals through focused practice practice.",
+        "resource_ids": [],
+        "origin": "template",
+        "model_id": null,
+        "context_hash": "40c53d8a77cf56a4",
+        "validation_status": "valid"
+      }
+    },
+    {
+      "entry_id": "4e4fbcf5-4a9c-4955-bba7-41d60aa7ef11",
+      "work_item_id": "7324869a-3af7-4cef-8e09-cc7ce2bd607e:loops:assess:01",
+      "topic_id": "loops",
+      "activity_kind": "assess",
+      "date": "2026-10-31",
+      "sequence": 3,
+      "duration_minutes": 10,
+      "reason_code": "GOAL_TARGET",
+      "reason_details": {
+        "unit_key": "loops:assess:01",
+        "duration": 10,
+        "topic_id": "loops",
+        "is_target": true
+      },
+      "activity": {
+        "title": "Loops: Assess",
+        "steps": [
+          "Review objective: Study core principles of Loops",
+          "Work through structured assess guide for Loops",
+          "Complete hands-on exercise (10 min)",
+          "Verify mastery against Study core principles of Loops"
+        ],
+        "expected_outcome": "Master Loops fundamentals through focused assess practice.",
+        "resource_ids": [],
+        "origin": "template",
+        "model_id": null,
+        "context_hash": "7404de72f109c889",
+        "validation_status": "valid"
+      }
+    }
+  ],
+  "deferred": [],
+  "assumptions": [],
+  "completed_history": [],
+  "overlay": {
+    "input_revision": 2,
+    "current_revision": 5,
+    "is_stale": true
+  }
+}

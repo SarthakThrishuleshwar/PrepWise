@@ -20,6 +20,7 @@ import { CurriculumPage } from './features/curriculum/CurriculumPage'
 import { StudyPage, AskPrepWise } from './features/activities'
 import { ChangesPage } from './features/insights'
 import { ProgressPage } from './features/progress'
+import { PlanPage } from './features/planning/PlanPage'
 import { FeaturePage } from './components/FeaturePage'
 import './styles/sidebar.css'
 
@@ -282,8 +283,8 @@ export function App() {
               </span>
               prepwise<span className="brand-dot">.</span>
             </Link>
-            <Link to="/setup" className="header-action" style={{ fontSize: '13px' }}>
-              Goal <ArrowUpRight size={14} aria-hidden="true" />
+            <Link to="/plan" className="header-action" style={{ fontSize: '13px' }}>
+              Plan <ArrowUpRight size={14} aria-hidden="true" />
             </Link>
           </header>
 
@@ -293,9 +294,15 @@ export function App() {
               <span>{getViewTitle()}</span>
             </div>
             <div className="app-topbar-actions">
-              <Link to="/setup" className="header-action">
-                Your workspace <ArrowUpRight size={16} aria-hidden="true" />
-              </Link>
+              {activeGoalId ? (
+                <Link to="/plan" className="header-action" title="View scheduled plan for active goal">
+                  Active goal <ArrowUpRight size={14} aria-hidden="true" />
+                </Link>
+              ) : (
+                <Link to="/setup" className="header-action">
+                  Set goal <ArrowUpRight size={14} aria-hidden="true" />
+                </Link>
+              )}
             </div>
           </div>
 
@@ -304,18 +311,7 @@ export function App() {
               <Route path="/" element={<Home />} />
               <Route path="/setup" element={<Setup />} />
               <Route path="/curriculum" element={<CurriculumPage />} />
-              <Route
-                path="/plan"
-                element={
-                  <FeaturePage
-                    feature="Personalized planning"
-                    title="A clear path starts with your goal."
-                    description="Your profile and availability can be saved now. The planning feature will turn them into a validated daily schedule."
-                    owner="Member 3 · Planning"
-                    secondaryAction={{ to: '/changes', label: 'View plan changes & export' }}
-                  />
-                }
-              />
+              <Route path="/plan" element={<PlanPage />} />
               <Route path="/study" element={<StudyPage />} />
               <Route path="/progress" element={<ProgressPage />} />
               <Route path="/changes" element={<ChangesPage />} />
