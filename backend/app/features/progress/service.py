@@ -41,6 +41,7 @@ class ProgressService:
         session: Session,
         goal_id: str,
         student_id: str,
+        topic_id: str | None = None,
         skill_id: str | None = None,
         form: str | None = None,
         difficulty: int | None = None,
@@ -75,6 +76,7 @@ class ProgressService:
             session=session,
             curriculum_id=curriculum_id,
             student_id=student_id,
+            topic_id=topic_id,
             skill_id=skill_id,
             form=form,
             difficulty=difficulty,
@@ -370,6 +372,7 @@ class ProgressService:
         for s in skills:
             attempts = ProgressRepository.get_student_skill_attempts(session, student_id, s["id"])
             evidence_dict = compute_skill_evidence(s["id"], attempts)
+            evidence_dict["topic_id"] = s.get("topic_id")
             evidence_items.append(SkillEvidence(**evidence_dict))
 
         return LearningStateResponse(
@@ -500,6 +503,7 @@ class ProgressService:
         for s in curriculum_skills:
             attempts = ProgressRepository.get_student_skill_attempts(session, student_id, s["id"])
             ev_dict = compute_skill_evidence(s["id"], attempts)
+            ev_dict["topic_id"] = s.get("topic_id")
             ev = SkillEvidence(**ev_dict)
             skill_evidence.append(ev)
             if ev.independent_count > 0:

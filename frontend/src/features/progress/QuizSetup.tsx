@@ -115,6 +115,7 @@ export function QuizSetup({
     const formParam = mode === 'practice' ? 'practice' : undefined
 
     fetchQuestions(goalId, {
+      topic_id: selectedTopic || undefined,
       skill_id: selectedSkill || undefined,
       difficulty: diffParam,
       form: formParam,
@@ -144,7 +145,7 @@ export function QuizSetup({
     return () => {
       active = false
     }
-  }, [goalId, selectedSkill, difficulty, mode])
+  }, [goalId, selectedTopic, selectedSkill, difficulty, mode])
 
   async function handleStart(e: FormEvent) {
     e.preventDefault()
@@ -156,6 +157,7 @@ export function QuizSetup({
       const formParam = mode === 'practice' ? 'practice' : undefined
 
       const res = await fetchQuestions(goalId, {
+        topic_id: selectedTopic || undefined,
         skill_id: selectedSkill || undefined,
         difficulty: diffParam,
         form: formParam,
@@ -216,6 +218,7 @@ export function QuizSetup({
                   }}
                   className="setup-select"
                 >
+                  <option value="">All target topics</option>
                   {goal?.targets && goal.targets.length > 0
                     ? goal.targets.map((t) => (
                         <option key={t.topic_id} value={t.topic_id}>
@@ -238,11 +241,13 @@ export function QuizSetup({
                   className="setup-select"
                 >
                   <option value="">All topic skills</option>
-                  {(learningState?.skills || []).map((s) => (
-                    <option key={s.skill_id} value={s.skill_id}>
-                      {s.skill_id.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')} ({s.skill_id})
-                    </option>
-                  ))}
+                  {(learningState?.skills || [])
+                    .filter((s) => !selectedTopic || !s.topic_id || s.topic_id === selectedTopic)
+                    .map((s) => (
+                      <option key={s.skill_id} value={s.skill_id}>
+                        {s.skill_id.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')} ({s.skill_id})
+                      </option>
+                    ))}
                 </select>
               </label>
             </div>

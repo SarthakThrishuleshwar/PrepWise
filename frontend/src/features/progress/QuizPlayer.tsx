@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { ArrowLeft, ArrowRight, CheckCircle2, HelpCircle, RefreshCw, Send } from 'lucide-react'
 import { Button, Notice, Panel } from '../../components/ui'
+import { api } from '../../lib/api'
+import type { Profile } from '../../lib/api'
 import { submitAttemptBatch } from './progress-api'
 import type { AttemptBatchReceipt, QuizConfig, QuizQuestion } from './types'
 
@@ -91,6 +93,16 @@ export function QuizPlayer({
     setSubmissionError('')
 
     try {
+      let activeRevision = currentRevision
+      try {
+        const freshProfile = await api<Profile>('/me')
+        if (freshProfile && typeof freshProfile.input_revision === 'number') {
+          activeRevision = freshProfile.input_revision
+        }
+      } catch {
+        // Fall back to currentRevision if network fails
+      }
+
       const items = questions.map((q) => ({
         question_id: q.question_id,
         selected_option: answers[q.question_id],
@@ -100,7 +112,7 @@ export function QuizPlayer({
       const receipt = await submitAttemptBatch(
         goalId,
         {
-          expected_revision: currentRevision,
+          expected_revision: activeRevision,
           items,
         },
         idempotencyKey

@@ -149,6 +149,7 @@ class ResourceMatch(Contract):
 
 class SkillEvidence(Contract):
     skill_id: str
+    topic_id: str | None = None
     independent_count: int = Field(ge=0)
     supported_count: int = Field(ge=0)
     performance_estimate: float | None = Field(default=None, ge=0, le=1)

@@ -416,16 +416,19 @@ def setup_demo_scenario(force_reset: bool = False) -> dict[str, Any]:
                 session.execute(delete(PlanVersions).where(PlanVersions.id.in_(plan_ids)))
             if goal_ids:
                 session.execute(delete(WorkItems).where(WorkItems.goal_id.in_(goal_ids)))
-                session.execute(delete(Availability).where(Availability.goal_id.in_(goal_ids)))
-                session.execute(delete(GoalTopics).where(GoalTopics.goal_id.in_(goal_ids)))
-                session.execute(delete(Goals).where(Goals.id.in_(goal_ids)))
 
-            session.execute(delete(RequestReceipts).where(RequestReceipts.student_id == s_id))
             session.execute(delete(Attempts).where(Attempts.student_id == s_id))
             session.execute(delete(StudentSkillState).where(StudentSkillState.student_id == s_id))
             session.execute(delete(StudyScopes).where(StudyScopes.student_id == s_id))
             session.execute(delete(ResourceUploads).where(ResourceUploads.student_id == s_id))
             session.execute(delete(LearningProjects).where(LearningProjects.student_id == s_id))
+
+            if goal_ids:
+                session.execute(delete(Availability).where(Availability.goal_id.in_(goal_ids)))
+                session.execute(delete(GoalTopics).where(GoalTopics.goal_id.in_(goal_ids)))
+                session.execute(delete(Goals).where(Goals.id.in_(goal_ids)))
+
+            session.execute(delete(RequestReceipts).where(RequestReceipts.student_id == s_id))
             session.execute(delete(Students).where(Students.id == s_id))
             student = None
 
