@@ -6,6 +6,7 @@ import { Home } from './features/home/Home'
 import { Setup } from './features/planning/Setup'
 import { CurriculumPage } from './features/curriculum/CurriculumPage'
 import { StudyPage, AskPrepWise } from './features/activities'
+import { ChangesPage } from './features/insights'
 import { FeaturePage } from './components/FeaturePage'
 
 export function App() {
@@ -40,6 +41,7 @@ export function App() {
           <NavLink to="/curriculum">Curriculum</NavLink>
           <NavLink to="/plan">My plan</NavLink>
           <NavLink to="/study">Study</NavLink>
+          <NavLink to="/changes">Changes</NavLink>
           <NavLink to="/progress">Progress</NavLink>
         </nav>
         <Link to="/setup" className="header-action">
@@ -74,17 +76,7 @@ export function App() {
               />
             }
           />
-          <Route
-            path="/changes"
-            element={
-              <FeaturePage
-                feature="Plan comparison"
-                title="See the reason behind every change."
-                description="Compare saved plan versions and export your schedule once the planning and insights features are connected."
-                owner="Member 5 · Insights"
-              />
-            }
-          />
+          <Route path="/changes" element={<ChangesPage />} />
           <Route
             path="*"
             element={
