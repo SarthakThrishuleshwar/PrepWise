@@ -101,6 +101,7 @@ class CurriculumRepository:
                     created_at=row["created_at"],
                     updated_at=row["updated_at"],
                     resource_count=res_count,
+                    goal_id=row["goal_id"],
                 )
             )
         return results
@@ -124,6 +125,7 @@ class CurriculumRepository:
             created_at=row["created_at"],
             updated_at=row["updated_at"],
             resource_count=res_count,
+            goal_id=row["goal_id"],
         )
 
     def save_study_scope(
@@ -149,6 +151,17 @@ class CurriculumRepository:
                 f"Selected topics not found in curriculum {project.curriculum_id}: {', '.join(invalid)}",
                 422,
             )
+
+        if not selected_topic_ids and not selected_resource_ids:
+            raise AppError("INPUT_INVALID", "Choose at least one topic or resource.", 422)
+        authored_ids = set(self.session.execute(select(T["resources"].c.id).where(
+            T["resources"].c.curriculum_id == project.curriculum_id)).scalars())
+        uploaded_ids = set(self.session.execute(select(T["resource_uploads"].c.id).where(
+            T["resource_uploads"].c.student_id == student_id,
+            T["resource_uploads"].c.project_id == project_id,
+            T["resource_uploads"].c.processing_status != "archived")).scalars())
+        if any(rid not in authored_ids | uploaded_ids for rid in selected_resource_ids):
+            raise AppError("RESOURCE_NOT_FOUND", "Choose accessible resources from this project.", 422)
 
         selection_id = str(uuid4())
         now = datetime.now(timezone.utc).isoformat()
@@ -228,11 +241,13 @@ class CurriculumRepository:
                 chunk_count=1,
                 processing_status=ResourceProcessingStatus.indexed,
                 byte_size=len(body.encode("utf-8")),
+                original_filename=row["title"],
+                extracted_text=body,
             )
 
         # Check uploaded resources table
         up_table = T["resource_uploads"]
-        query = select(up_table).where(up_table.c.id == resource_id)
+        query = select(up_table).where(up_table.c.id == resource_id, up_table.c.processing_status != "archived")
         if student_id:
             query = query.where(up_table.c.student_id == student_id)
         up_row = self.session.execute(query).mappings().first()
@@ -253,4 +268,8 @@ class CurriculumRepository:
             chunk_count=max(1, len(text_content) // 1500),
             processing_status=ResourceProcessingStatus(up_row["processing_status"]),
             byte_size=up_row["byte_size"],
+            original_filename=up_row["original_filename"],
+            mime_type=up_row["mime_type"],
+            created_at=up_row["created_at"],
+            extracted_text=text_content,
         )

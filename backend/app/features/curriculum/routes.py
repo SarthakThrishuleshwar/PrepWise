@@ -4,6 +4,7 @@ from sqlalchemy import select
 from app.api.deps import current_student, get_session
 from app.contracts.domain import CurriculumSnapshot, ResourceMatch
 from app.db.models import Base
+from app.core.errors import AppError
 from app.features.curriculum.contracts import (
     ProjectCreate,
     ProjectPublic,
@@ -137,6 +138,33 @@ def get_resource_preview(
         resource_id=resource_id,
         student_id=student["id"],
     )
+
+
+@router.get("/curricula/{curriculum_id}/resources", response_model=list[ResourcePreview])
+def authored_resources(curriculum_id: str, session=Depends(get_session)):
+    service.curriculum_snapshot(session, curriculum_id)
+    ids = session.execute(select(T["resources"].c.id).where(
+        T["resources"].c.curriculum_id == curriculum_id)).scalars().all()
+    return [service.get_resource_preview(session, rid) for rid in ids]
+
+
+@router.delete("/curricula/resources/{resource_id}")
+def archive_resource(resource_id: str, student=Depends(current_student), session=Depends(get_session)):
+    table = T["resource_uploads"]
+    row = session.execute(select(table).where(table.c.id == resource_id,
+        table.c.student_id == student["id"])).mappings().first()
+    if not row:
+        raise AppError("RESOURCE_NOT_FOUND", "Resource not found or unavailable.", 404)
+    session.execute(table.update().where(table.c.id == resource_id).values(processing_status="archived"))
+    scopes = T["study_scopes"]
+    import json
+    for scope in session.execute(select(scopes).where(scopes.c.student_id == student["id"])).mappings():
+        resources = json.loads(scope["selected_resources_json"])
+        if resource_id in resources:
+            session.execute(scopes.update().where(scopes.c.id == scope["id"]).values(
+                selected_resources_json=json.dumps([rid for rid in resources if rid != resource_id])))
+    session.commit()
+    return {"resource_id": resource_id, "status": "archived"}
 
 
 @router.get("/curricula/retrieval", response_model=list[ResourceMatch])

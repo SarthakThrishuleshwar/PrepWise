@@ -210,6 +210,17 @@ def upload_resource(
     topic_id: str | None = None,
     title: str | None = None,
 ) -> UploadedResourceDetail:
+    if project_id:
+        project = CurriculumRepository(session).get_project(project_id, student_id)
+        if curriculum_id and curriculum_id != project.curriculum_id:
+            raise AppError("CURRICULUM_MISMATCH", "Choose the project's curriculum.", 422)
+        curriculum_id = project.curriculum_id
+    if topic_id:
+        topic_query = select(T["topics"].c.id).where(T["topics"].c.id == topic_id)
+        if curriculum_id:
+            topic_query = topic_query.where(T["topics"].c.curriculum_id == curriculum_id)
+        if not session.execute(topic_query).first():
+            raise AppError("TOPIC_NOT_FOUND", "Choose a topic from the project's curriculum.", 422)
     # Size check: 10 MB
     if len(content) > 10 * 1024 * 1024:
         raise AppError("FILE_TOO_LARGE", "Resource files must be 10 MB or smaller.", 422)
@@ -227,7 +238,8 @@ def upload_resource(
 
     # Check for duplicate
     existing = session.execute(
-        select(table).where(table.c.student_id == student_id, table.c.content_hash == content_hash)
+        select(table).where(table.c.student_id == student_id, table.c.content_hash == content_hash,
+            table.c.project_id == project_id, table.c.processing_status != "archived")
     ).mappings().first()
 
     if existing:
@@ -317,7 +329,7 @@ def upload_resource(
 
 def list_uploaded_resources(session: Session, student_id: str, project_id: str | None = None) -> list[ResourcePreview]:
     table = T["resource_uploads"]
-    query = select(table).where(table.c.student_id == student_id)
+    query = select(table).where(table.c.student_id == student_id, table.c.processing_status != "archived")
     if project_id:
         query = query.where(table.c.project_id == project_id)
     query = query.order_by(table.c.created_at.desc())
@@ -339,6 +351,9 @@ def list_uploaded_resources(session: Session, student_id: str, project_id: str |
                 chunk_count=max(1, len(text_c) // 1600),
                 processing_status=ResourceProcessingStatus(r["processing_status"]),
                 byte_size=r["byte_size"],
+                original_filename=r["original_filename"],
+                mime_type=r["mime_type"],
+                created_at=r["created_at"],
             )
         )
     return results

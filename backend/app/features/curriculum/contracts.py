@@ -58,6 +58,7 @@ class ProjectPublic(Contract):
     created_at: str
     updated_at: str
     resource_count: int = Field(default=0, ge=0)
+    goal_id: str | None = None
 
 
 class SourceChunk(Contract):
@@ -102,11 +103,15 @@ class ResourcePreview(Contract):
     chunk_count: int = Field(default=0, ge=0)
     processing_status: ResourceProcessingStatus
     byte_size: int = Field(default=0, ge=0)
+    original_filename: str = ""
+    mime_type: str = "text/plain"
+    created_at: str = ""
+    extracted_text: str | None = None
 
 
 class StudyScopeSave(Contract):
     """Student study scope selection linking topics, resources, and free-text queries."""
-    selected_topic_ids: list[str] = Field(min_length=1, description="At least one target topic is required")
+    selected_topic_ids: list[str] = Field(default_factory=list, max_length=30)
     selected_resource_ids: list[str] = Field(default_factory=list, description="Optional specific resources chosen")
     free_text_request: str | None = Field(default=None, max_length=1000, description="Optional raw study inquiry")
 
