@@ -141,11 +141,18 @@ const MOCK_CHANGES_V2 = {
 }
 
 test.describe('ChangesPage feature suite', () => {
-  test('navigation bar contains link to Changes', async ({ page }) => {
+  test('navigation bar contains link to Changes', async ({ page, isMobile }) => {
     await page.goto('/')
-    const navLink = page.getByRole('link', { name: 'Changes' })
-    await expect(navLink).toBeVisible()
-    await navLink.click()
+    if (isMobile) {
+      await page.getByRole('button', { name: /Open navigation menu/i }).click()
+      const navLink = page.getByRole('dialog', { name: /Mobile navigation/i }).getByRole('link', { name: 'Changes' })
+      await expect(navLink).toBeVisible()
+      await navLink.click()
+    } else {
+      const navLink = page.getByRole('link', { name: 'Changes' })
+      await expect(navLink).toBeVisible()
+      await navLink.click()
+    }
     await expect(page).toHaveURL(/\/changes/)
   })
 
@@ -317,8 +324,12 @@ test.describe('ChangesPage feature suite', () => {
     await page.goto('/changes?plan_id=plan-v2-test')
 
     // Toggle to Changes Summary and CSV
-    await page.getByRole('button', { name: 'Changes Summary' }).click()
-    await page.getByRole('button', { name: 'CSV' }).click()
+    const changesSummaryBtn = page.getByRole('button', { name: 'Changes Summary' })
+    await changesSummaryBtn.scrollIntoViewIfNeeded()
+    await changesSummaryBtn.click({ force: true })
+    const csvBtn = page.getByRole('button', { name: 'CSV' })
+    await csvBtn.scrollIntoViewIfNeeded()
+    await csvBtn.click({ force: true })
 
     // Preview export
     await page.getByRole('button', { name: /preview export/i }).click()

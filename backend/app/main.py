@@ -81,7 +81,7 @@ def create_app(settings=None, database=None, gateway=None):
 
     @app.get("/api/v1/capabilities", tags=["foundation"])
     def capabilities():
-        return {**app.state.gateway.capabilities(), "phase": "foundation", "features": {"profile": True, "curriculum_read": True, "goal_save": True, "planning": False, "activities": True, "assistant": True, "assessment": False, "insights": True}}
+        return {**app.state.gateway.capabilities(), "phase": "foundation", "features": {"profile": True, "curriculum_read": True, "goal_save": True, "planning": False, "activities": True, "assistant": True, "assessment": True, "insights": True}}
 
     @app.post("/api/v1/students", response_model=StudentCreated, status_code=201, tags=["foundation"])
     def create_student(body: StudentCreate, session=Depends(get_session)):

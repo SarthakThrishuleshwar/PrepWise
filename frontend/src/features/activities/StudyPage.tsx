@@ -281,6 +281,7 @@ export const StudyPage: React.FC = () => {
               onRevealHint={revealNextHint}
               onToggleSolution={toggleSolution}
               durationMinutes={pkg.duration_minutes}
+              topicId={pkg.topic_id || topicParam || undefined}
             />
           </section>
 

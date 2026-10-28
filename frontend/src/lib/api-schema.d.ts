@@ -294,6 +294,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/goals/{goal_id}/recommendation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Recommendation */
+        get: operations["recommendation_api_v1_goals__goal_id__recommendation_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/goals/{goal_id}/quiz-history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** History */
+        get: operations["history_api_v1_goals__goal_id__quiz_history_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/goals/{goal_id}/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Dashboard */
+        get: operations["dashboard_api_v1_goals__goal_id__dashboard_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/plans/{plan_id}/changes": {
         parameters: {
             query?: never;
@@ -301,7 +352,12 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Changes */
+        /**
+         * Changes
+         * @description Return factual before/after comparison between the requested plan version and its parent.
+         *     Enforces student ownership of the plan's goal.
+         *     Returns 404 PLAN_NOT_FOUND for unknown or inaccessible plans.
+         */
         get: operations["changes_api_v1_plans__plan_id__changes_get"];
         put?: never;
         post?: never;
@@ -318,7 +374,12 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Export */
+        /**
+         * Export
+         * @description Version-specific plan or comparison export as CSV or JSON.
+         *     Enforces student ownership: returns 404 PLAN_NOT_FOUND for unknown or unowned plan IDs.
+         *     Exports the exact plan_id requested without silently replacing with current.
+         */
         get: operations["export_api_v1_plans__plan_id__export_get"];
         put?: never;
         post?: never;
@@ -516,6 +577,23 @@ export interface components {
             /** Items */
             items: components["schemas"]["AttemptInput"][];
         };
+        /** AttemptBatchReceipt */
+        AttemptBatchReceipt: {
+            /** Batch Id */
+            batch_id: string;
+            /** Goal Id */
+            goal_id: string;
+            /** Accepted Revision */
+            accepted_revision: number;
+            /** New Revision */
+            new_revision: number;
+            /** Correct Count */
+            correct_count: number;
+            /** Question Count */
+            question_count: number;
+            /** Results */
+            results: components["schemas"]["AttemptItemResult"][];
+        };
         /** AttemptInput */
         AttemptInput: {
             /** Question Id */
@@ -527,6 +605,30 @@ export interface components {
              * @default 0
              */
             hints_used: number;
+        };
+        /** AttemptItemResult */
+        AttemptItemResult: {
+            /** Question Id */
+            question_id: string;
+            /** Skill Id */
+            skill_id: string;
+            /** Selected Option */
+            selected_option: string;
+            /** Correct */
+            correct: boolean;
+            /** Correct Option */
+            correct_option: string;
+            /** Explanation */
+            explanation: string;
+            /** Hints Used */
+            hints_used: number;
+            /**
+             * Evidence Type
+             * @enum {string}
+             */
+            evidence_type: "independent" | "supported";
+            /** Attempt Id */
+            attempt_id: string;
         };
         /** AvailabilityInput */
         AvailabilityInput: {
@@ -597,6 +699,75 @@ export interface components {
                 [key: string]: string;
             }[];
         };
+        /** DashboardOverviewResponse */
+        DashboardOverviewResponse: {
+            /** Goal Id */
+            goal_id: string;
+            /** Goal Title */
+            goal_title: string;
+            /** Deadline */
+            deadline: string;
+            /** Has Active Plan */
+            has_active_plan: boolean;
+            /** Active Plan Id */
+            active_plan_id?: string | null;
+            /** Active Plan Version */
+            active_plan_version?: number | null;
+            /**
+             * Current Revision
+             * @default 0
+             */
+            current_revision: number;
+            /**
+             * Completed Work Items Count
+             * @default 0
+             */
+            completed_work_items_count: number;
+            /**
+             * Total Work Items Count
+             * @default 0
+             */
+            total_work_items_count: number;
+            /**
+             * Planned Minutes Completed
+             * @default 0
+             */
+            planned_minutes_completed: number;
+            /**
+             * Total Planned Minutes
+             * @default 0
+             */
+            total_planned_minutes: number;
+            /**
+             * Actual Minutes Recorded
+             * @default 0
+             */
+            actual_minutes_recorded: number;
+            /**
+             * Skills With Independent Evidence
+             * @default 0
+             */
+            skills_with_independent_evidence: number;
+            /**
+             * Total Skills Count
+             * @default 0
+             */
+            total_skills_count: number;
+            /** Latest Quiz Score */
+            latest_quiz_score?: {
+                [key: string]: unknown;
+            } | null;
+            /** Scheduled Items */
+            scheduled_items?: components["schemas"]["WorkItemSummary"][];
+            /** Skill Evidence */
+            skill_evidence?: components["schemas"]["SkillEvidence"][];
+            recommendation?: components["schemas"]["QuizRecommendationResponse"] | null;
+            /**
+             * Disclaimer
+             * @default Completion tracks participation. Assessments show recent demonstrated performance.
+             */
+            disclaimer: string;
+        };
         /** DiagramData */
         DiagramData: {
             /**
@@ -644,6 +815,15 @@ export interface components {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
+        /** LearningStateResponse */
+        LearningStateResponse: {
+            /** Goal Id */
+            goal_id: string;
+            /** Skills */
+            skills?: components["schemas"]["SkillEvidence"][];
+            /** Items */
+            items?: components["schemas"]["SkillEvidence"][];
+        };
         /** PlanJobCreate */
         PlanJobCreate: {
             /** Expected Revision */
@@ -681,6 +861,33 @@ export interface components {
             /** Actual Minutes */
             actual_minutes?: number | null;
         };
+        /** ProgressEventReceipt */
+        ProgressEventReceipt: {
+            /** Event Id */
+            event_id: string;
+            /** Goal Id */
+            goal_id: string;
+            /** Plan Id */
+            plan_id: string;
+            /** Work Item Id */
+            work_item_id: string;
+            /**
+             * Event Type
+             * @enum {string}
+             */
+            event_type: "completed" | "missed";
+            /** Actual Minutes */
+            actual_minutes?: number | null;
+            /**
+             * Work Item State
+             * @enum {string}
+             */
+            work_item_state: "pending" | "missed" | "completed";
+            /** New Revision */
+            new_revision: number;
+            /** Occurred At */
+            occurred_at: string;
+        };
         /** ProgressiveHint */
         ProgressiveHint: {
             /** Level */
@@ -708,6 +915,139 @@ export interface components {
             validation_status: string;
             /** Latency Ms */
             latency_ms?: number | null;
+        };
+        /** QuestionPublic */
+        QuestionPublic: {
+            /** Question Id */
+            question_id: string;
+            /** Skill Id */
+            skill_id: string;
+            /** Prompt */
+            prompt: string;
+            /** Options */
+            options: {
+                [key: string]: string;
+            };
+            /** Difficulty */
+            difficulty: number;
+            /**
+             * Form
+             * @enum {string}
+             */
+            form: "baseline" | "followup" | "practice";
+            /** Source Label */
+            source_label?: string | null;
+        };
+        /** QuestionsResponse */
+        QuestionsResponse: {
+            /** Goal Id */
+            goal_id: string;
+            /** Questions */
+            questions?: components["schemas"]["QuestionPublic"][];
+            /** Items */
+            items?: components["schemas"]["QuestionPublic"][];
+            /**
+             * Question Pool Exhausted
+             * @default false
+             */
+            question_pool_exhausted: boolean;
+        };
+        /** QuizHistoryItem */
+        QuizHistoryItem: {
+            /** Batch Id */
+            batch_id: string;
+            /** Submitted At */
+            submitted_at: string;
+            /** Skill Ids */
+            skill_ids?: string[];
+            /** Skill Titles */
+            skill_titles?: string[];
+            /** Question Count */
+            question_count: number;
+            /** Correct Count */
+            correct_count: number;
+            /** Score Percent */
+            score_percent: number;
+            /** Evidence Type Summary */
+            evidence_type_summary: string;
+            /** Items */
+            items?: components["schemas"]["AttemptItemResult"][];
+        };
+        /** QuizHistoryResponse */
+        QuizHistoryResponse: {
+            /** Goal Id */
+            goal_id: string;
+            /** Batches */
+            batches?: components["schemas"]["QuizHistoryItem"][];
+            /**
+             * Total Quizzes
+             * @default 0
+             */
+            total_quizzes: number;
+            /**
+             * Total Questions Attempted
+             * @default 0
+             */
+            total_questions_attempted: number;
+            /** Average Accuracy */
+            average_accuracy?: number | null;
+        };
+        /** QuizRecommendationResponse */
+        QuizRecommendationResponse: {
+            /** Goal Id */
+            goal_id: string;
+            /**
+             * Action
+             * @enum {string}
+             */
+            action: "targeted_quiz" | "fresh_check" | "mixed_practice" | "challenge_quiz";
+            /** Priority Skill Id */
+            priority_skill_id?: string | null;
+            /** Priority Skill Title */
+            priority_skill_title?: string | null;
+            /** Skill Ids */
+            skill_ids?: string[];
+            /**
+             * Effective Difficulty
+             * @default 3
+             */
+            effective_difficulty: number;
+            /**
+             * Difficulty Label
+             * @default practice
+             */
+            difficulty_label: string;
+            /**
+             * Question Count
+             * @default 5
+             */
+            question_count: number;
+            /**
+             * Reason Code
+             * @enum {string}
+             */
+            reason_code: "needs_attention" | "limited_evidence" | "no_evidence" | "ordinary_practice" | "strong_mastery";
+            /** Supporting Attempt Ids */
+            supporting_attempt_ids?: string[];
+            /** Factual Explanation */
+            factual_explanation: string;
+            /**
+             * Availability Status
+             * @enum {string}
+             */
+            availability_status: "available" | "limited" | "exhausted" | "supported_only";
+            /**
+             * Available Count
+             * @default 0
+             */
+            available_count: number;
+            /**
+             * Is Supported Practice Only
+             * @default false
+             */
+            is_supported_practice_only: boolean;
+            /** Questions */
+            questions?: components["schemas"]["QuestionPublic"][];
         };
         /** ResourceMatch */
         ResourceMatch: {
@@ -892,6 +1232,32 @@ export interface components {
             duration_minutes: number;
             /** Predecessor Ids */
             predecessor_ids?: string[];
+        };
+        /** WorkItemSummary */
+        WorkItemSummary: {
+            /** Work Item Id */
+            work_item_id: string;
+            /** Plan Id */
+            plan_id: string;
+            /** Title */
+            title: string;
+            /** Kind */
+            kind: string;
+            /** Study Date */
+            study_date: string;
+            /** Sequence */
+            sequence: number;
+            /** Duration Minutes */
+            duration_minutes: number;
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "pending" | "completed" | "missed";
+            /** Actual Minutes */
+            actual_minutes?: number | null;
+            /** Skill Id */
+            skill_id?: string | null;
         };
         /** WorkedExample */
         WorkedExample: {
@@ -1352,8 +1718,9 @@ export interface operations {
     event_api_v1_goals__goal_id__progress_events_post: {
         parameters: {
             query?: never;
-            header?: {
+            header: {
                 "X-Local-Token"?: string | null;
+                "Idempotency-Key": string;
             };
             path: {
                 goal_id: string;
@@ -1367,12 +1734,12 @@ export interface operations {
         };
         responses: {
             /** @description Successful Response */
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["ProgressEventReceipt"];
                 };
             };
             /** @description Validation Error */
@@ -1389,8 +1756,9 @@ export interface operations {
     attempts_api_v1_goals__goal_id__attempt_batches_post: {
         parameters: {
             query?: never;
-            header?: {
+            header: {
                 "X-Local-Token"?: string | null;
+                "Idempotency-Key": string;
             };
             path: {
                 goal_id: string;
@@ -1404,12 +1772,12 @@ export interface operations {
         };
         responses: {
             /** @description Successful Response */
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["AttemptBatchReceipt"];
                 };
             };
             /** @description Validation Error */
@@ -1425,7 +1793,16 @@ export interface operations {
     };
     questions_api_v1_goals__goal_id__questions_get: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Optional skill ID filter */
+                skill_id?: string | null;
+                /** @description Question form filter: baseline, followup, practice */
+                form?: string | null;
+                /** @description Difficulty filter between 1 and 5 */
+                difficulty?: number | null;
+                /** @description Max questions to return (1-50) */
+                limit?: number;
+            };
             header?: {
                 "X-Local-Token"?: string | null;
             };
@@ -1442,7 +1819,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["QuestionsResponse"];
                 };
             };
             /** @description Validation Error */
@@ -1457,6 +1834,42 @@ export interface operations {
         };
     };
     state_api_v1_goals__goal_id__learning_state_get: {
+        parameters: {
+            query?: {
+                /** @description Optional skill ID filter */
+                skill_id?: string | null;
+            };
+            header?: {
+                "X-Local-Token"?: string | null;
+            };
+            path: {
+                goal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LearningStateResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    recommendation_api_v1_goals__goal_id__recommendation_get: {
         parameters: {
             query?: never;
             header?: {
@@ -1475,7 +1888,73 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["QuizRecommendationResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    history_api_v1_goals__goal_id__quiz_history_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Local-Token"?: string | null;
+            };
+            path: {
+                goal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuizHistoryResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    dashboard_api_v1_goals__goal_id__dashboard_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Local-Token"?: string | null;
+            };
+            path: {
+                goal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DashboardOverviewResponse"];
                 };
             };
             /** @description Validation Error */
@@ -1524,7 +2003,12 @@ export interface operations {
     };
     export_api_v1_plans__plan_id__export_get: {
         parameters: {
-            query?: never;
+            query: {
+                /** @description Export format: csv or json */
+                format: string;
+                /** @description Export type: 'plan' (full schedule) or 'changes' (comparison summary) */
+                type?: string;
+            };
             header?: {
                 "X-Local-Token"?: string | null;
             };

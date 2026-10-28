@@ -12,6 +12,7 @@ interface StudyPracticeProps {
   onRevealHint: () => void
   onToggleSolution: () => void
   durationMinutes: number
+  topicId?: string
 }
 
 export const StudyPractice: React.FC<StudyPracticeProps> = ({
@@ -23,6 +24,7 @@ export const StudyPractice: React.FC<StudyPracticeProps> = ({
   onRevealHint,
   onToggleSolution,
   durationMinutes,
+  topicId,
 }) => {
   const totalHints = hints.length
   const hasMoreHints = revealedHintsCount < totalHints
@@ -121,9 +123,22 @@ export const StudyPractice: React.FC<StudyPracticeProps> = ({
         <span style={{ fontSize: '13px', color: 'var(--dp-color-ink-secondary)' }}>
           Finished this {durationMinutes}-minute study session?
         </span>
-        <Link to="/progress" className="button button--primary" style={{ minHeight: '38px', fontSize: '14px' }}>
-          Record Progress & Assessment <ArrowRight size={15} aria-hidden="true" />
-        </Link>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+          <Link
+            to={topicId ? `/progress?tab=quiz&topic=${encodeURIComponent(topicId)}` : '/progress?tab=quiz'}
+            className="button button--secondary"
+            style={{ minHeight: '38px', fontSize: '13.5px' }}
+          >
+            Take Skill Quiz <ArrowRight size={15} aria-hidden="true" />
+          </Link>
+          <Link
+            to="/progress"
+            className="button button--primary"
+            style={{ minHeight: '38px', fontSize: '13.5px' }}
+          >
+            Record Progress & Assessment <ArrowRight size={15} aria-hidden="true" />
+          </Link>
+        </div>
       </div>
     </div>
   )

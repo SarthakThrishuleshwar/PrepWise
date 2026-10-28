@@ -716,6 +716,17 @@
               ],
               "title": "X-Local-Token"
             }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "title": "Idempotency-Key"
+            }
           }
         ],
         "requestBody": {
@@ -729,11 +740,13 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/ProgressEventReceipt"
+                }
               }
             }
           },
@@ -782,6 +795,17 @@
               ],
               "title": "X-Local-Token"
             }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "title": "Idempotency-Key"
+            }
           }
         ],
         "requestBody": {
@@ -795,11 +819,13 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/AttemptBatchReceipt"
+                }
               }
             }
           },
@@ -834,6 +860,76 @@
             }
           },
           {
+            "name": "skill_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Optional skill ID filter",
+              "title": "Skill Id"
+            },
+            "description": "Optional skill ID filter"
+          },
+          {
+            "name": "form",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Question form filter: baseline, followup, practice",
+              "title": "Form"
+            },
+            "description": "Question form filter: baseline, followup, practice"
+          },
+          {
+            "name": "difficulty",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 5,
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Difficulty filter between 1 and 5",
+              "title": "Difficulty"
+            },
+            "description": "Difficulty filter between 1 and 5"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50,
+              "minimum": 1,
+              "description": "Max questions to return (1-50)",
+              "default": 10,
+              "title": "Limit"
+            },
+            "description": "Max questions to return (1-50)"
+          },
+          {
             "name": "X-Local-Token",
             "in": "header",
             "required": false,
@@ -855,7 +951,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/QuestionsResponse"
+                }
               }
             }
           },
@@ -890,6 +988,24 @@
             }
           },
           {
+            "name": "skill_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Optional skill ID filter",
+              "title": "Skill Id"
+            },
+            "description": "Optional skill ID filter"
+          },
+          {
             "name": "X-Local-Token",
             "in": "header",
             "required": false,
@@ -911,7 +1027,183 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/LearningStateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/goals/{goal_id}/recommendation": {
+      "get": {
+        "tags": [
+          "progress"
+        ],
+        "summary": "Recommendation",
+        "operationId": "recommendation_api_v1_goals__goal_id__recommendation_get",
+        "parameters": [
+          {
+            "name": "goal_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Goal Id"
+            }
+          },
+          {
+            "name": "X-Local-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Local-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuizRecommendationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/goals/{goal_id}/quiz-history": {
+      "get": {
+        "tags": [
+          "progress"
+        ],
+        "summary": "History",
+        "operationId": "history_api_v1_goals__goal_id__quiz_history_get",
+        "parameters": [
+          {
+            "name": "goal_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Goal Id"
+            }
+          },
+          {
+            "name": "X-Local-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Local-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuizHistoryResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/goals/{goal_id}/dashboard": {
+      "get": {
+        "tags": [
+          "progress"
+        ],
+        "summary": "Dashboard",
+        "operationId": "dashboard_api_v1_goals__goal_id__dashboard_get",
+        "parameters": [
+          {
+            "name": "goal_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Goal Id"
+            }
+          },
+          {
+            "name": "X-Local-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Local-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardOverviewResponse"
+                }
               }
             }
           },
@@ -934,6 +1226,7 @@
           "insights"
         ],
         "summary": "Changes",
+        "description": "Return factual before/after comparison between the requested plan version and its parent.\nEnforces student ownership of the plan's goal.\nReturns 404 PLAN_NOT_FOUND for unknown or inaccessible plans.",
         "operationId": "changes_api_v1_plans__plan_id__changes_get",
         "parameters": [
           {
@@ -990,6 +1283,7 @@
           "insights"
         ],
         "summary": "Export",
+        "description": "Version-specific plan or comparison export as CSV or JSON.\nEnforces student ownership: returns 404 PLAN_NOT_FOUND for unknown or unowned plan IDs.\nExports the exact plan_id requested without silently replacing with current.",
         "operationId": "export_api_v1_plans__plan_id__export_get",
         "parameters": [
           {
@@ -1000,6 +1294,29 @@
               "type": "string",
               "title": "Plan Id"
             }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Export format: csv or json",
+              "title": "Format"
+            },
+            "description": "Export format: csv or json"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Export type: 'plan' (full schedule) or 'changes' (comparison summary)",
+              "default": "plan",
+              "title": "Type"
+            },
+            "description": "Export type: 'plan' (full schedule) or 'changes' (comparison summary)"
           },
           {
             "name": "X-Local-Token",
@@ -1565,6 +1882,53 @@
         ],
         "title": "AttemptBatch"
       },
+      "AttemptBatchReceipt": {
+        "properties": {
+          "batch_id": {
+            "type": "string",
+            "title": "Batch Id"
+          },
+          "goal_id": {
+            "type": "string",
+            "title": "Goal Id"
+          },
+          "accepted_revision": {
+            "type": "integer",
+            "title": "Accepted Revision"
+          },
+          "new_revision": {
+            "type": "integer",
+            "title": "New Revision"
+          },
+          "correct_count": {
+            "type": "integer",
+            "title": "Correct Count"
+          },
+          "question_count": {
+            "type": "integer",
+            "title": "Question Count"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/AttemptItemResult"
+            },
+            "type": "array",
+            "title": "Results"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "batch_id",
+          "goal_id",
+          "accepted_revision",
+          "new_revision",
+          "correct_count",
+          "question_count",
+          "results"
+        ],
+        "title": "AttemptBatchReceipt"
+      },
       "AttemptInput": {
         "properties": {
           "question_id": {
@@ -1590,6 +1954,66 @@
           "selected_option"
         ],
         "title": "AttemptInput"
+      },
+      "AttemptItemResult": {
+        "properties": {
+          "question_id": {
+            "type": "string",
+            "title": "Question Id"
+          },
+          "skill_id": {
+            "type": "string",
+            "title": "Skill Id"
+          },
+          "selected_option": {
+            "type": "string",
+            "title": "Selected Option"
+          },
+          "correct": {
+            "type": "boolean",
+            "title": "Correct"
+          },
+          "correct_option": {
+            "type": "string",
+            "title": "Correct Option"
+          },
+          "explanation": {
+            "type": "string",
+            "title": "Explanation"
+          },
+          "hints_used": {
+            "type": "integer",
+            "maximum": 10.0,
+            "minimum": 0.0,
+            "title": "Hints Used"
+          },
+          "evidence_type": {
+            "type": "string",
+            "enum": [
+              "independent",
+              "supported"
+            ],
+            "title": "Evidence Type"
+          },
+          "attempt_id": {
+            "type": "string",
+            "title": "Attempt Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "question_id",
+          "skill_id",
+          "selected_option",
+          "correct",
+          "correct_option",
+          "explanation",
+          "hints_used",
+          "evidence_type",
+          "attempt_id"
+        ],
+        "title": "AttemptItemResult"
       },
       "AvailabilityInput": {
         "properties": {
@@ -1771,6 +2195,138 @@
         ],
         "title": "CurriculumSnapshot"
       },
+      "DashboardOverviewResponse": {
+        "properties": {
+          "goal_id": {
+            "type": "string",
+            "title": "Goal Id"
+          },
+          "goal_title": {
+            "type": "string",
+            "title": "Goal Title"
+          },
+          "deadline": {
+            "type": "string",
+            "title": "Deadline"
+          },
+          "has_active_plan": {
+            "type": "boolean",
+            "title": "Has Active Plan"
+          },
+          "active_plan_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Active Plan Id"
+          },
+          "active_plan_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Active Plan Version"
+          },
+          "current_revision": {
+            "type": "integer",
+            "title": "Current Revision",
+            "default": 0
+          },
+          "completed_work_items_count": {
+            "type": "integer",
+            "title": "Completed Work Items Count",
+            "default": 0
+          },
+          "total_work_items_count": {
+            "type": "integer",
+            "title": "Total Work Items Count",
+            "default": 0
+          },
+          "planned_minutes_completed": {
+            "type": "integer",
+            "title": "Planned Minutes Completed",
+            "default": 0
+          },
+          "total_planned_minutes": {
+            "type": "integer",
+            "title": "Total Planned Minutes",
+            "default": 0
+          },
+          "actual_minutes_recorded": {
+            "type": "integer",
+            "title": "Actual Minutes Recorded",
+            "default": 0
+          },
+          "skills_with_independent_evidence": {
+            "type": "integer",
+            "title": "Skills With Independent Evidence",
+            "default": 0
+          },
+          "total_skills_count": {
+            "type": "integer",
+            "title": "Total Skills Count",
+            "default": 0
+          },
+          "latest_quiz_score": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latest Quiz Score"
+          },
+          "scheduled_items": {
+            "items": {
+              "$ref": "#/components/schemas/WorkItemSummary"
+            },
+            "type": "array",
+            "title": "Scheduled Items"
+          },
+          "skill_evidence": {
+            "items": {
+              "$ref": "#/components/schemas/SkillEvidence"
+            },
+            "type": "array",
+            "title": "Skill Evidence"
+          },
+          "recommendation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/QuizRecommendationResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "disclaimer": {
+            "type": "string",
+            "title": "Disclaimer",
+            "default": "Completion tracks participation. Assessments show recent demonstrated performance."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "goal_id",
+          "goal_title",
+          "deadline",
+          "has_active_plan"
+        ],
+        "title": "DashboardOverviewResponse"
+      },
       "DiagramData": {
         "properties": {
           "kind": {
@@ -1891,6 +2447,34 @@
         "type": "object",
         "title": "HTTPValidationError"
       },
+      "LearningStateResponse": {
+        "properties": {
+          "goal_id": {
+            "type": "string",
+            "title": "Goal Id"
+          },
+          "skills": {
+            "items": {
+              "$ref": "#/components/schemas/SkillEvidence"
+            },
+            "type": "array",
+            "title": "Skills"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SkillEvidence"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "goal_id"
+        ],
+        "title": "LearningStateResponse"
+      },
       "PlanJobCreate": {
         "properties": {
           "expected_revision": {
@@ -2005,6 +2589,77 @@
         ],
         "title": "ProgressCommand"
       },
+      "ProgressEventReceipt": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "goal_id": {
+            "type": "string",
+            "title": "Goal Id"
+          },
+          "plan_id": {
+            "type": "string",
+            "title": "Plan Id"
+          },
+          "work_item_id": {
+            "type": "string",
+            "title": "Work Item Id"
+          },
+          "event_type": {
+            "type": "string",
+            "enum": [
+              "completed",
+              "missed"
+            ],
+            "title": "Event Type"
+          },
+          "actual_minutes": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 480.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actual Minutes"
+          },
+          "work_item_state": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "missed",
+              "completed"
+            ],
+            "title": "Work Item State"
+          },
+          "new_revision": {
+            "type": "integer",
+            "title": "New Revision"
+          },
+          "occurred_at": {
+            "type": "string",
+            "title": "Occurred At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "event_id",
+          "goal_id",
+          "plan_id",
+          "work_item_id",
+          "event_type",
+          "work_item_state",
+          "new_revision",
+          "occurred_at"
+        ],
+        "title": "ProgressEventReceipt"
+      },
       "ProgressiveHint": {
         "properties": {
           "level": {
@@ -2087,6 +2742,322 @@
           "validation_status"
         ],
         "title": "ProvenanceMetadata"
+      },
+      "QuestionPublic": {
+        "properties": {
+          "question_id": {
+            "type": "string",
+            "title": "Question Id"
+          },
+          "skill_id": {
+            "type": "string",
+            "title": "Skill Id"
+          },
+          "prompt": {
+            "type": "string",
+            "title": "Prompt"
+          },
+          "options": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Options"
+          },
+          "difficulty": {
+            "type": "integer",
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Difficulty"
+          },
+          "form": {
+            "type": "string",
+            "enum": [
+              "baseline",
+              "followup",
+              "practice"
+            ],
+            "title": "Form"
+          },
+          "source_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Label"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "question_id",
+          "skill_id",
+          "prompt",
+          "options",
+          "difficulty",
+          "form"
+        ],
+        "title": "QuestionPublic"
+      },
+      "QuestionsResponse": {
+        "properties": {
+          "goal_id": {
+            "type": "string",
+            "title": "Goal Id"
+          },
+          "questions": {
+            "items": {
+              "$ref": "#/components/schemas/QuestionPublic"
+            },
+            "type": "array",
+            "title": "Questions"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/QuestionPublic"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "question_pool_exhausted": {
+            "type": "boolean",
+            "title": "Question Pool Exhausted",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "goal_id"
+        ],
+        "title": "QuestionsResponse"
+      },
+      "QuizHistoryItem": {
+        "properties": {
+          "batch_id": {
+            "type": "string",
+            "title": "Batch Id"
+          },
+          "submitted_at": {
+            "type": "string",
+            "title": "Submitted At"
+          },
+          "skill_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Skill Ids"
+          },
+          "skill_titles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Skill Titles"
+          },
+          "question_count": {
+            "type": "integer",
+            "title": "Question Count"
+          },
+          "correct_count": {
+            "type": "integer",
+            "title": "Correct Count"
+          },
+          "score_percent": {
+            "type": "integer",
+            "title": "Score Percent"
+          },
+          "evidence_type_summary": {
+            "type": "string",
+            "title": "Evidence Type Summary"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/AttemptItemResult"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "batch_id",
+          "submitted_at",
+          "question_count",
+          "correct_count",
+          "score_percent",
+          "evidence_type_summary"
+        ],
+        "title": "QuizHistoryItem"
+      },
+      "QuizHistoryResponse": {
+        "properties": {
+          "goal_id": {
+            "type": "string",
+            "title": "Goal Id"
+          },
+          "batches": {
+            "items": {
+              "$ref": "#/components/schemas/QuizHistoryItem"
+            },
+            "type": "array",
+            "title": "Batches"
+          },
+          "total_quizzes": {
+            "type": "integer",
+            "title": "Total Quizzes",
+            "default": 0
+          },
+          "total_questions_attempted": {
+            "type": "integer",
+            "title": "Total Questions Attempted",
+            "default": 0
+          },
+          "average_accuracy": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Average Accuracy"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "goal_id"
+        ],
+        "title": "QuizHistoryResponse"
+      },
+      "QuizRecommendationResponse": {
+        "properties": {
+          "goal_id": {
+            "type": "string",
+            "title": "Goal Id"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "targeted_quiz",
+              "fresh_check",
+              "mixed_practice",
+              "challenge_quiz"
+            ],
+            "title": "Action"
+          },
+          "priority_skill_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Priority Skill Id"
+          },
+          "priority_skill_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Priority Skill Title"
+          },
+          "skill_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Skill Ids"
+          },
+          "effective_difficulty": {
+            "type": "integer",
+            "title": "Effective Difficulty",
+            "default": 3
+          },
+          "difficulty_label": {
+            "type": "string",
+            "title": "Difficulty Label",
+            "default": "practice"
+          },
+          "question_count": {
+            "type": "integer",
+            "title": "Question Count",
+            "default": 5
+          },
+          "reason_code": {
+            "type": "string",
+            "enum": [
+              "needs_attention",
+              "limited_evidence",
+              "no_evidence",
+              "ordinary_practice",
+              "strong_mastery"
+            ],
+            "title": "Reason Code"
+          },
+          "supporting_attempt_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Supporting Attempt Ids"
+          },
+          "factual_explanation": {
+            "type": "string",
+            "title": "Factual Explanation"
+          },
+          "availability_status": {
+            "type": "string",
+            "enum": [
+              "available",
+              "limited",
+              "exhausted",
+              "supported_only"
+            ],
+            "title": "Availability Status"
+          },
+          "available_count": {
+            "type": "integer",
+            "title": "Available Count",
+            "default": 0
+          },
+          "is_supported_practice_only": {
+            "type": "boolean",
+            "title": "Is Supported Practice Only",
+            "default": false
+          },
+          "questions": {
+            "items": {
+              "$ref": "#/components/schemas/QuestionPublic"
+            },
+            "type": "array",
+            "title": "Questions"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "goal_id",
+          "action",
+          "reason_code",
+          "factual_explanation",
+          "availability_status"
+        ],
+        "title": "QuizRecommendationResponse"
       },
       "ResourceMatch": {
         "properties": {
@@ -2643,6 +3614,82 @@
           "duration_minutes"
         ],
         "title": "WorkItem"
+      },
+      "WorkItemSummary": {
+        "properties": {
+          "work_item_id": {
+            "type": "string",
+            "title": "Work Item Id"
+          },
+          "plan_id": {
+            "type": "string",
+            "title": "Plan Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "study_date": {
+            "type": "string",
+            "title": "Study Date"
+          },
+          "sequence": {
+            "type": "integer",
+            "title": "Sequence"
+          },
+          "duration_minutes": {
+            "type": "integer",
+            "title": "Duration Minutes"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "completed",
+              "missed"
+            ],
+            "title": "State"
+          },
+          "actual_minutes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actual Minutes"
+          },
+          "skill_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skill Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "work_item_id",
+          "plan_id",
+          "title",
+          "kind",
+          "study_date",
+          "sequence",
+          "duration_minutes",
+          "state"
+        ],
+        "title": "WorkItemSummary"
       },
       "WorkedExample": {
         "properties": {

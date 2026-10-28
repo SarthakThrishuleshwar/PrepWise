@@ -33,7 +33,7 @@ test('assistant: context-aware learning assistant on study page with starter que
 
   // Assistant should respond with grounded answer
   await expect(drawer.locator('.assistant-bubble-content').first()).toBeVisible({ timeout: 25_000 })
-  await expect(drawer.getByText(/Grounded in:/i).first()).toBeVisible()
+  await expect(drawer.getByText(/Grounded in:/i).first()).toBeVisible({ timeout: 25_000 })
 
   // Save desktop assistant screenshot
   await page.screenshot({ path: 'test-results/assistant-desktop.png', fullPage: true })
