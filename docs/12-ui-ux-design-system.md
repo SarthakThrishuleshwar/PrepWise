@@ -82,7 +82,7 @@ Date constraints and errors are inline and associated by aria-describedby. Keep 
 
 ### Plan/study/progress/changes
 
-Provide loading, empty, error, ready, stale and degraded content states. Plan distinguishes full/partial/no_capacity with words plus numeric details; never color alone. Activity provenance and sources stay inspectable. Evidence uses counts and an unknown/limited label. A completion control never says mastery. Comparison explains changes before export.
+Provide loading, empty, error, ready, stale and degraded content states. Plan distinguishes full/partial/no_capacity with words plus numeric details; never color alone. Activity provenance and sources stay inspectable. Evidence uses counts and an unknown/limited label. A completion control never says mastery. Comparison shows factual before/after changes and saved reason/evidence references before export; Member 1 supplies explanation wording.
 
 Foundation route states must name the pending capability honestly and offer navigation back to setup/curriculum; they should not look like a broken blank page.
 
